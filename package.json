@@ -13,14 +13,14 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.3",
-    "jest": "^23.5.0",
-    "mongoose": "^5.2.13",
-    "supertest": "^3.3.0"
+    "mongoose": "^5.2.13"
   },
   "devDependencies": {
     "eslint": "^5.5.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "nodemon": "^1.18.4"
+    "jest": "^23.5.0",
+    "nodemon": "^1.18.4",
+    "supertest": "^3.3.0"
   }
 }
