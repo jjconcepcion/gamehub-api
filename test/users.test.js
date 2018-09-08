@@ -1,13 +1,12 @@
 const { User } = require('../models/users');
 
 describe('Users', () => {
-  const data = {
-    name: 'aaaa',
-    email: 'aaaa',
-    password: 'aaaa',
-  };
-
   describe('schema validation', () => {
+    const data = {
+      name: 'aaaa',
+      email: 'aaaa',
+      password: 'aaaa',
+    };
 
     it('should be invalid if name is not provided', async () => {
       delete data.name;
