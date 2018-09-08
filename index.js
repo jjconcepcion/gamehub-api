@@ -1,13 +1,13 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const config = require('config');
 const logger = require('./init/logger');
+const connectToDatabase = require('./init/db');
 
 const app = express();
-app.get('/', (req, res) => res.send('gamehub-api'));
 
-const db = config.get('db');
-mongoose.connect(db).then(() => logger.info(`Connected to ${db}`));
+connectToDatabase();
+
+app.get('/', (req, res) => res.send('gamehub-api'));
 
 const port = process.env.PORT || 3000;
 const server = app.listen(port, () => logger.info(`Listening on port ${port}.`));
