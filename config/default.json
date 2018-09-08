@@ -1,3 +1,4 @@
 {
-    "db": "mongodb://localhost/gamehub-api"
+    "db": "mongodb://localhost/gamehub-api",
+    "listenPort": 3000
 }
