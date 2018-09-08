@@ -4,7 +4,7 @@ describe('GET /', async () => {
   let api;
 
   beforeAll(() => {
-    api = require('..'); // eslint-disable-line global-require
+    api = require('../..'); // eslint-disable-line global-require
   });
 
   afterAll(async () => { await api.close(); });
