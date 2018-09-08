@@ -6,11 +6,13 @@ describe('Users', () => {
     email: 'aaaa',
     password: 'aaaa',
   };
-  
+
   describe('schema validation', () => {
 
     it('should be invalid if name is not provided', async () => {
-      const user = new User();
+      delete data.name;
+
+      const user = new User(data);
 
       expect.assertions(1);
       await user.validate()
