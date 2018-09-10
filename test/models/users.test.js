@@ -37,6 +37,5 @@ describe('Users', () => {
       await user.validate()
         .catch((err) => { expect(err.errors.password).toBeDefined(); });
     });
-
   });
 });
