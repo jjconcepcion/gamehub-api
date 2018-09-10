@@ -1,0 +1,94 @@
+Gamehub API
+
+======================
+Users
+======================
+
+Get list of Users
+----------------------
+    method: GET
+    url: /api/users
+
+Show user details
+----------------------
+    method: GET
+    url: /api/users/:id
+
+Create a user
+----------------------
+    method: POST
+    url: /api/users
+
+Update user details
+----------------------
+    method: PUT
+    url: /api/users/:id
+
+Delete a user
+----------------------
+    method: DELETE
+    url: /api/users/:id
+
+
+======================
+Auth
+======================
+
+Login a user
+----------------------
+    method: POST
+    url: /api/auth
+
+======================
+Games
+======================
+
+Get list of available game types
+----------------------
+    method: GET
+    url: /api/games
+
+Get game details
+----------------------
+    method: GET
+    url: /api/games/:id
+
+Create a game type
+----------------------
+    method: POST
+    url: /api/games/:id
+
+Update a game
+----------------------
+    method: PUT
+    url: /api/games/:id
+
+Delete a game
+----------------------
+    method: DELETE
+    url: /api/games/:id
+
+
+======================
+Rooms
+======================
+
+Get a list of game rooms
+----------------------
+    method: GET
+    url: /api/rooms/
+
+Get room details
+----------------------
+    method: GET
+    url: /api/rooms/:id
+
+Create a room
+----------------------
+    method: POST
+    url: /api/rooms/
+
+Delete a room
+----------------------
+    method: DELETE
+    url: /api/rooms/:id
