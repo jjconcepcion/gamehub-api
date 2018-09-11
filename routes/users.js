@@ -10,17 +10,20 @@ router.post('/', async (req, res) => {
     password: req.body.password,
   });
 
-  const emailExists = await User.findOne({ email: req.body.email }).select('email');
-  if (emailExists) {
+  const checkUserExists = [
+    User.findOne({ email: req.body.email }).select('email'),
+    User.findOne({ name: req.body.name }).select('name'),
+  ];
+
+  const results = await Promise.all(checkUserExists);
+  if (results[0]) {
     return res.status(409).send('User with email already exists');
   }
-
-  const nameExists = await User.findOne({ name: req.body.name }).select('name');
-  if (nameExists) {
+  if (results[1]) {
     return res.status(409).send('Username with  already exists');
   }
 
-  try {
+  try {// to create user
     const result = await user.save();
     await user.save();
     res.send(result);
