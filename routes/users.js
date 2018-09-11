@@ -3,6 +3,11 @@ const { User } = require('../models/users');
 
 const router = express.Router();
 
+router.get('/', async (req, res) => {
+  const users = await User.find({}).sort('name');
+  res.send(users);
+});
+
 router.post('/', async (req, res) => {
   const user = new User({
     name: req.body.name,
@@ -23,7 +28,7 @@ router.post('/', async (req, res) => {
     return res.status(409).send('Username with  already exists');
   }
 
-  try {// to create user
+  try { // to create user
     const result = await user.save();
     await user.save();
     res.send(result);

@@ -14,6 +14,31 @@ describe('/api/users', async () => {
   });
 
   //
+  // GET /api/users
+  //
+  describe('GET /api/users', async () => {
+    it('should return list of users', async () => {
+      const user1 = { name: 'user1', email: 'email1', password: 'pass1' };
+      const user2 = { name: 'user2', email: 'email2', password: 'pass2' };
+
+      await User.insertMany([user1, user2]);
+
+      const res = await request(api).get('/api/users');
+
+      expect(res.status).toBe(200);
+
+      expect(res.body.length).toBe(2);
+
+      expect(res.body).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining(user2),
+          expect.objectContaining(user1),
+        ]),
+      );
+    });
+  });
+
+  //
   // POST /api/users
   //
   describe('POST /', async () => {
