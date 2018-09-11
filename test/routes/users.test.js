@@ -58,7 +58,7 @@ describe('/api/users', async () => {
       expect(res.status).toBe(400);
     });
 
-    it('should create the user in the database if the valid', async () => {
+    it('should create the user in the database if valid', async () => {
       await request(api)
         .post('/api/users')
         .send(payload);
@@ -67,6 +67,16 @@ describe('/api/users', async () => {
 
       ['name', 'email', 'password'].forEach((p) => {
         expect(userInDb).toHaveProperty(p);
+      });
+    });
+
+    it('should return created user', async () => {
+      const res = await request(api)
+        .post('/api/users')
+        .send(payload);
+
+      ['name', 'email', 'password'].forEach((p) => {
+        expect(res.body).toHaveProperty(p);
       });
     });
   });

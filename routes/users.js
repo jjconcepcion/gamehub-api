@@ -11,8 +11,9 @@ router.post('/', async (req, res) => {
   });
 
   try {
+    const result = await user.save();
     await user.save();
-    res.send();
+    res.send(result);
   } catch (err) {
     res.status(400).send(err);
   }
