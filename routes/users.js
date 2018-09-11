@@ -15,6 +15,11 @@ router.post('/', async (req, res) => {
     return res.status(409).send('User with email already exists');
   }
 
+  const nameExists = await User.findOne({ name: req.body.name }).select('name');
+  if (nameExists) {
+    return res.status(409).send('Username with  already exists');
+  }
+
   try {
     const result = await user.save();
     await user.save();

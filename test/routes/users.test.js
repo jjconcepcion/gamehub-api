@@ -88,7 +88,23 @@ describe('/api/users', async () => {
         email: payload.email,
         password: 'bbbb',
       });
-      
+
+      await user.save();
+
+      const res = await request(api)
+        .post('/api/users')
+        .send(payload);
+
+      expect(res.status).toBe(409);
+    });
+
+    it('should return 409 if user with name already exists', async () => {
+      const user = new User({
+        name: payload.name,
+        email: 'bbbb',
+        password: 'bbbb',
+      });
+
       await user.save();
 
       const res = await request(api)
