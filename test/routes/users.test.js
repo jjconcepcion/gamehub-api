@@ -13,7 +13,9 @@ describe('/api/users', async () => {
     };
   });
 
-
+  //
+  // POST /api/users
+  //
   describe('POST /', async () => {
     afterEach(async () => {
       // cleanup database
@@ -78,6 +80,22 @@ describe('/api/users', async () => {
       ['name', 'email', 'password'].forEach((p) => {
         expect(res.body).toHaveProperty(p);
       });
+    });
+
+    it('should return 409 if user with email already exists', async () => {
+      const user = new User({
+        name: 'bbbb',
+        email: payload.email,
+        password: 'bbbb',
+      });
+      
+      await user.save();
+
+      const res = await request(api)
+        .post('/api/users')
+        .send(payload);
+
+      expect(res.status).toBe(409);
     });
   });
 });

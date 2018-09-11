@@ -10,6 +10,11 @@ router.post('/', async (req, res) => {
     password: req.body.password,
   });
 
+  const emailExists = await User.findOne({ email: req.body.email }).select('email');
+  if (emailExists) {
+    return res.status(409).send('User with email already exists');
+  }
+
   try {
     const result = await user.save();
     await user.save();
@@ -17,6 +22,8 @@ router.post('/', async (req, res) => {
   } catch (err) {
     res.status(400).send(err);
   }
+
+  return undefined;
 });
 
 module.exports = router;
