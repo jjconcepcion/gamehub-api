@@ -1,14 +1,7 @@
 const request = require('supertest');
+const api = require('../../index');
 
 describe('/api/users', () => {
-  let api;
-
-  beforeAll(() => {
-    api = require('../../index'); // eslint-disable-line global-require
-  });
-
-  afterAll(async () => { await api.close(); });
-
   const payload = {
     name: 'aaaa',
     email: 'aaaa',

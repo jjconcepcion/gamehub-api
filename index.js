@@ -15,6 +15,9 @@ app.use('/', home);
 app.use('/api/users', users);
 
 const port = process.env.PORT || config.get('listenPort');
-const server = app.listen(port, () => logger.info(`Listening on port ${port}.`));
 
-module.exports = server;
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(port, () => logger.info(`Listening on port ${port}.`));
+}
+
+module.exports = app;
