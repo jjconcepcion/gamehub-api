@@ -2,11 +2,15 @@ const request = require('supertest');
 const api = require('../../index');
 
 describe('/api/users', () => {
-  const payload = {
-    name: 'aaaa',
-    email: 'aaaa',
-    password: 'aaaa',
-  };
+  let payload;
+
+  beforeEach(() => {
+    payload = {
+      name: 'aaaa',
+      email: 'aaaa',
+      password: 'aaaa',
+    };
+  });
 
   describe('POST /', () => {
     it('should respond 200 status if request is valid', async () => {
