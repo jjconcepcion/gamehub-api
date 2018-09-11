@@ -11,7 +11,7 @@ router.post('/', async (req, res) => {
   });
 
   try {
-    await user.validate();
+    await user.save();
     res.send();
   } catch (err) {
     res.status(400).send(err);
