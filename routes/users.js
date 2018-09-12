@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const { User } = require('../models/users');
 
 const router = express.Router();
@@ -6,6 +7,20 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   const users = await User.find({}).sort('name');
   res.send(users);
+});
+
+router.get('/:id', async (req, res) => {
+  const validObjectId = mongoose.Types.ObjectId.isValid(req.params.id);
+  if (!validObjectId) {
+    return res.status(400).send({ error: '_id: invalid syntax' });
+  }
+
+  const user = await User.findOne({ _id: req.params.id });
+
+  if (!user) {
+    return res.status(404).send({ error: '_id: user not found' });
+  }
+  return res.send(user);
 });
 
 router.post('/', async (req, res) => {

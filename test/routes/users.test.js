@@ -1,4 +1,5 @@
 const request = require('supertest');
+const mongoose = require('mongoose');
 const api = require('../../index');
 const { User } = require('../../models/users');
 
@@ -40,6 +41,51 @@ describe('/api/users', async () => {
           expect.objectContaining(user1),
         ]),
       );
+    });
+  });
+
+  //
+  // GET /api/users/:id
+  //
+  describe('GET /:id', async () => {
+    it('should return 200 if id references a valid user', async () => {
+      const user = new User(payload);
+
+      await user.save();
+
+      const res = await request(api)
+        .get(`/api/users/${user._id}`);
+
+      expect(res.status).toBe(200);
+    });
+
+    it('should return user if id is valid', async () => {
+      const user = new User(payload);
+
+      await user.save();
+
+      const res = await request(api)
+        .get(`/api/users/${user._id}`);
+
+      expect(Object.keys(res.body)).toEqual(
+        expect.arrayContaining(Object.keys(payload)),
+      );
+    });
+
+    it('should return 400 if id is not valid ObjectId', async () => {
+      const res = await request(api)
+        .get(`/api/users/${1}`);
+
+      expect(res.status).toBe(400);
+    });
+
+    it('should return 404 if id does not reference valid user', async () => {
+      const id = new mongoose.Types.ObjectId();
+
+      const res = await request(api)
+        .get(`/api/users/${id}`);
+
+      expect(res.status).toBe(404);
     });
   });
 
