@@ -2,12 +2,16 @@ const { User } = require('../../models/users');
 
 describe('Users', () => {
   describe('schema validation', () => {
-    const data = {
-      name: 'aaaa',
-      email: 'aaaa',
-      password: '12345678',
-    };
+    let data;
 
+    beforeEach(() => {
+      data = {
+        name: 'aaaa',
+        email: 'aaaa',
+        password: '12345678',
+      };
+    });
+    
     it('should be invalid if name is not provided', async () => {
       delete data.name;
 
