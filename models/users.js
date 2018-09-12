@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 
 
 function validateEmail(email) {
@@ -30,5 +31,20 @@ const userSchema = mongoose.Schema({
   },
 });
 
+// Returns a Promise which resolves a signed JSONWebToken or rejects with
+// and error
+userSchema.methods.generateAuthToken = function generateAuthToken() {
+  const jwtPrivateKey = 'secret123';
+
+  return new Promise((resolve, reject) => {
+    jwt.sign({ _id: this._id }, jwtPrivateKey, (err, token) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(token);
+      }
+    });
+  });
+};
 
 module.exports.User = mongoose.model('User', userSchema);

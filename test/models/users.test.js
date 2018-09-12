@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const { User } = require('../../models/users');
 
 describe('Users', () => {
@@ -92,6 +93,24 @@ describe('Users', () => {
       }
 
       expect.assertions(invalidEmails.length);
+    });
+  });
+
+  describe('generateAuthToken() instance method', () => {
+    it('should encode the user id in the token payload', async () => {
+      const jwtPrivateKey = 'secret123';
+      const data = {
+        name: 'aaaa',
+        email: 'a@mail.com',
+        password: '12345678',
+      };
+      const user = new User(data);
+      const token = await user.generateAuthToken();
+
+      expect.assertions(1);
+      jwt.verify(token, jwtPrivateKey, (err, decode) => {
+        expect(decode).toHaveProperty('_id');
+      });
     });
   });
 });
