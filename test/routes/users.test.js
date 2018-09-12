@@ -9,7 +9,7 @@ describe('/api/users', async () => {
     payload = {
       name: 'aaaa',
       email: 'aaaa',
-      password: 'aaaa',
+      password: '12345678',
     };
   });
 
@@ -18,8 +18,8 @@ describe('/api/users', async () => {
   //
   describe('GET /api/users', async () => {
     it('should return list of users', async () => {
-      const user1 = { name: 'user1', email: 'email1', password: 'pass1' };
-      const user2 = { name: 'user2', email: 'email2', password: 'pass2' };
+      const user1 = { name: 'user1', email: 'email1', password: 'password1' };
+      const user2 = { name: 'user2', email: 'email2', password: 'password2' };
 
       await User.insertMany([user1, user2]);
 
@@ -111,7 +111,7 @@ describe('/api/users', async () => {
       const user = new User({
         name: 'bbbb',
         email: payload.email,
-        password: 'bbbb',
+        password: '12345678',
       });
 
       await user.save();
@@ -127,7 +127,7 @@ describe('/api/users', async () => {
       const user = new User({
         name: payload.name,
         email: 'bbbb',
-        password: 'bbbb',
+        password: '12345678',
       });
 
       await user.save();

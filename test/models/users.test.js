@@ -5,7 +5,7 @@ describe('Users', () => {
     const data = {
       name: 'aaaa',
       email: 'aaaa',
-      password: 'aaaa',
+      password: '12345678',
     };
 
     it('should be invalid if name is not provided', async () => {
@@ -30,6 +30,36 @@ describe('Users', () => {
 
     it('should be invalid if password is not provided', async () => {
       delete data.password;
+
+      const user = new User(data);
+
+      expect.assertions(1);
+      await user.validate()
+        .catch((err) => { expect(err.errors.password).toBeDefined(); });
+    });
+
+    it('should be invalid if name is shorter than 3 characters', async () => {
+      data.name = 'aa';
+
+      const user = new User(data);
+
+      expect.assertions(1);
+      await user.validate()
+        .catch((err) => { expect(err.errors.name).toBeDefined(); });
+    });
+
+    it('should be invalid if email is shorter than 3 characters', async () => {
+      data.email = 'aa';
+
+      const user = new User(data);
+
+      expect.assertions(1);
+      await user.validate()
+        .catch((err) => { expect(err.errors.email).toBeDefined(); });
+    });
+
+    it('should be invalid if password is shorter than 8 characters', async () => {
+      data.password = '1234567';
 
       const user = new User(data);
 
