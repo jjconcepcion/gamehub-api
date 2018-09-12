@@ -22,10 +22,10 @@ router.post('/', async (req, res) => {
 
   const results = await Promise.all(checkUserExists);
   if (results[0]) {
-    return res.status(409).send('User with email already exists');
+    return res.status(409).send({ error: 'email: is already registered' });
   }
   if (results[1]) {
-    return res.status(409).send('Username with  already exists');
+    return res.status(409).send({ error: 'name: is unavailable' });
   }
 
   try { // to create user
@@ -33,7 +33,7 @@ router.post('/', async (req, res) => {
     await user.save();
     res.send(result);
   } catch (err) {
-    res.status(400).send(err);
+    res.status(400).send({ error: err.message });
   }
 
   return undefined;

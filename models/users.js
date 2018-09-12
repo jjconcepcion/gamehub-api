@@ -12,7 +12,7 @@ const userSchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
-    minlength: 3,
+    minlength: [3, 'must be at least 3 characters in length'],
   },
   email: {
     type: String,
@@ -20,13 +20,13 @@ const userSchema = mongoose.Schema({
     minlength: 3,
     validate: {
       validator: validateEmail,
-      message: 'Invalid email address',
+      message: 'invalid email address',
     },
   },
   password: {
     type: String,
     required: true,
-    minlength: 8,
+    minlength: [8, 'must be at leat 8 characters in length'],
   },
 });
 
