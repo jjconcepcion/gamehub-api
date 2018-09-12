@@ -11,7 +11,7 @@ describe('Users', () => {
         password: '12345678',
       };
     });
-    
+
     it('should be invalid if name is not provided', async () => {
       delete data.name;
 
@@ -70,6 +70,28 @@ describe('Users', () => {
       expect.assertions(1);
       await user.validate()
         .catch((err) => { expect(err.errors.password).toBeDefined(); });
+    });
+
+    it('should not allow an invalid email address', async () => {
+      const invalidEmails = [
+        'plainaddress',
+        'abc..123@example.com',
+        '.email@example.com',
+        'email@example@example.com',
+        'email.example.com',
+      ]; // a small sample set
+
+      for (let i = 0; i < invalidEmails.length; i += 1) {
+        data.email = invalidEmails[i];
+        data.name = `name${i}`;
+        const user = new User(data);
+
+        // eslint-disable-next-line
+        await user.validate()
+          .catch((err) => { expect(err.errors.email).toBeDefined(); });
+      }
+
+      expect.assertions(invalidEmails.length);
     });
   });
 });
