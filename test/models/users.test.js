@@ -7,7 +7,7 @@ describe('Users', () => {
     beforeEach(() => {
       data = {
         name: 'aaaa',
-        email: 'aaaa',
+        email: 'a@mail.com',
         password: '12345678',
       };
     });

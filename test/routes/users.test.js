@@ -8,9 +8,14 @@ describe('/api/users', async () => {
   beforeEach(() => {
     payload = {
       name: 'aaaa',
-      email: 'aaaa',
+      email: 'a@mail.com',
       password: '12345678',
     };
+  });
+
+  afterEach(async () => {
+    // cleanup database
+    await User.remove({});
   });
 
   //
@@ -18,8 +23,8 @@ describe('/api/users', async () => {
   //
   describe('GET /api/users', async () => {
     it('should return list of users', async () => {
-      const user1 = { name: 'user1', email: 'email1', password: 'password1' };
-      const user2 = { name: 'user2', email: 'email2', password: 'password2' };
+      const user1 = { name: 'user1', email: 'a@mail.com', password: 'password1' };
+      const user2 = { name: 'user2', email: 'b@mail.com', password: 'password2' };
 
       await User.insertMany([user1, user2]);
 
@@ -42,11 +47,6 @@ describe('/api/users', async () => {
   // POST /api/users
   //
   describe('POST /', async () => {
-    afterEach(async () => {
-      // cleanup database
-      await User.remove({});
-    });
-
     it('should respond 200 status if request is valid', async () => {
       const res = await request(api)
         .post('/api/users')
@@ -126,7 +126,7 @@ describe('/api/users', async () => {
     it('should return 409 if user with name already exists', async () => {
       const user = new User({
         name: payload.name,
-        email: 'bbbb',
+        email: 'a@mail.com',
         password: '12345678',
       });
 
