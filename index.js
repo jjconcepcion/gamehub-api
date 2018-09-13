@@ -20,4 +20,8 @@ if (process.env.NODE_ENV !== 'test') {
   app.listen(port, () => logger.info(`Listening on port ${port}.`));
 }
 
+if (!config.get('jwtPrivateKey')) {
+  throw new Error('jwtPrivateKey not defined');
+}
+
 module.exports = app;

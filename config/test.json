@@ -1,4 +1,5 @@
 {
     "db": "mongodb://localhost/gamehub-api-test",
-    "listenPort": 3000
+    "listenPort": 3000,
+    "jwtPrivateKey": "secret123"
 }
