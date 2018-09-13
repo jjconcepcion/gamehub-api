@@ -12,7 +12,7 @@ describe('Login', async () => {
       password: '12345678',
     };
 
-    await new User(data).save();
+    await request(api).post('/api/users').send(data);
 
     payload = {
       name: data.name,
