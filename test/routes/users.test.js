@@ -49,24 +49,23 @@ describe('/api/users', async () => {
   // GET /api/users/:id
   //
   describe('GET /:id', async () => {
+    const getRequest = id => request(api)
+      .get(`/api/users/${id}`);
+
     it('should return 200 if id references a valid user', async () => {
       const user = new User(payload);
-
       await user.save();
 
-      const res = await request(api)
-        .get(`/api/users/${user._id}`);
+      const res = await getRequest(user._id);
 
       expect(res.status).toBe(200);
     });
 
     it('should return user if id is valid', async () => {
       const user = new User(payload);
-
       await user.save();
 
-      const res = await request(api)
-        .get(`/api/users/${user._id}`);
+      const res = await getRequest(user._id);
 
       expect(Object.keys(res.body)).toEqual(
         expect.arrayContaining(Object.keys(payload)),
@@ -74,8 +73,7 @@ describe('/api/users', async () => {
     });
 
     it('should return 400 if id is not valid ObjectId', async () => {
-      const res = await request(api)
-        .get(`/api/users/${1}`);
+      const res = await getRequest(1);
 
       expect(res.status).toBe(400);
     });
@@ -83,8 +81,7 @@ describe('/api/users', async () => {
     it('should return 404 if id does not reference valid user', async () => {
       const id = new mongoose.Types.ObjectId();
 
-      const res = await request(api)
-        .get(`/api/users/${id}`);
+      const res = await getRequest(id);
 
       expect(res.status).toBe(404);
     });
@@ -94,10 +91,12 @@ describe('/api/users', async () => {
   // POST /api/users
   //
   describe('POST /', async () => {
+    const postRequest = () => request(api)
+      .post('/api/users')
+      .send(payload);
+
     it('should respond 200 status if request is valid', async () => {
-      const res = await request(api)
-        .post('/api/users')
-        .send(payload);
+      const res = await postRequest();
 
       expect(res.status).toBe(200);
     });
@@ -105,9 +104,7 @@ describe('/api/users', async () => {
     it('should respond 400 status if name is not provided', async () => {
       delete payload.name;
 
-      const res = await request(api)
-        .post('/api/users')
-        .send(payload);
+      const res = await postRequest();
 
       expect(res.status).toBe(400);
     });
@@ -115,9 +112,7 @@ describe('/api/users', async () => {
     it('should respond 400 status if email is not provided', async () => {
       delete payload.email;
 
-      const res = await request(api)
-        .post('/api/users')
-        .send(payload);
+      const res = await postRequest();
 
       expect(res.status).toBe(400);
     });
@@ -125,17 +120,13 @@ describe('/api/users', async () => {
     it('should respond 400 status if password is not provided', async () => {
       delete payload.password;
 
-      const res = await request(api)
-        .post('/api/users')
-        .send(payload);
+      const res = await postRequest();
 
       expect(res.status).toBe(400);
     });
 
     it('should create the user in the database if valid', async () => {
-      await request(api)
-        .post('/api/users')
-        .send(payload);
+      await postRequest();
 
       const userInDb = await User.findOne({ email: payload.email });
 
@@ -145,9 +136,7 @@ describe('/api/users', async () => {
     });
 
     it('should return created user', async () => {
-      const res = await request(api)
-        .post('/api/users')
-        .send(payload);
+      const res = await postRequest();
 
       ['name', 'email', 'password'].forEach((p) => {
         expect(res.body).toHaveProperty(p);
@@ -163,9 +152,7 @@ describe('/api/users', async () => {
 
       await user.save();
 
-      const res = await request(api)
-        .post('/api/users')
-        .send(payload);
+      const res = await postRequest();
 
       expect(res.status).toBe(409);
     });
@@ -179,25 +166,19 @@ describe('/api/users', async () => {
 
       await user.save();
 
-      const res = await request(api)
-        .post('/api/users')
-        .send(payload);
+      const res = await postRequest();
 
       expect(res.status).toBe(409);
     });
 
     it('should set authorization response header if valid request', async () => {
-      const res = await request(api)
-        .post('/api/users')
-        .send(payload);
+      const res = await postRequest();
 
       expect(res.header.authorization).toBeDefined();
     });
 
     it('should return authorization token if valid request', async () => {
-      const res = await request(api)
-        .post('/api/users')
-        .send(payload);
+      const res = await postRequest();
 
       const token = res.header.authorization.split(' ')[1];
       const decoded = jwt.decode(token);
