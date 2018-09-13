@@ -2,8 +2,8 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const { User } = require('../../models/users');
 
-describe('Users', () => {
-  describe('schema validation', () => {
+describe('Users', async () => {
+  describe('schema validation', async () => {
     let data;
 
     beforeEach(() => {
@@ -97,7 +97,7 @@ describe('Users', () => {
     });
   });
 
-  describe('generateAuthToken() instance method', () => {
+  describe('generateAuthToken() instance method', async () => {
     it('should encode the user id in the token payload', async () => {
       const data = {
         name: 'aaaa',
