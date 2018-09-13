@@ -4,6 +4,7 @@ const logger = require('./init/logger');
 const connectToDatabase = require('./init/db');
 const home = require('./routes/home');
 const users = require('./routes/users');
+const login = require('./routes/login');
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(express.json());
 
 app.use('/', home);
 app.use('/api/users', users);
+app.use('/api/login', login);
 
 const port = process.env.PORT || config.get('listenPort');
 
