@@ -172,7 +172,7 @@ describe('/api/users', async () => {
     it('should return 409 if user with name already exists', async () => {
       const user = new User({
         name: payload.name,
-        email: 'a@mail.com',
+        email: 'b@mail.com',
         password: '12345678',
       });
 
