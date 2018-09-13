@@ -44,5 +44,13 @@ describe('Login', async () => {
 
       expect(res.status).toBe(400);
     });
+
+    it('should return 404 if name is not valid user ', async () => {
+      payload.name = 'a';
+
+      const res = await loginRequest();
+
+      expect(res.status).toBe(404);
+    });
   });
 });
