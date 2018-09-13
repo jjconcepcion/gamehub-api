@@ -6,7 +6,9 @@ const router = express.Router();
 
 // G list of users
 router.get('/', async (req, res) => {
-  const users = await User.find({}).sort('name');
+  const users = await User.find({})
+    .sort('name')
+    .select('_id name email');
   res.send(users);
 });
 
@@ -17,7 +19,8 @@ router.get('/:id', async (req, res) => {
     return res.status(400).send({ error: '_id: invalid syntax' });
   }
 
-  const user = await User.findOne({ _id: req.params.id });
+  const user = await User.findOne({ _id: req.params.id })
+    .select('_id name email');
 
   if (!user) {
     return res.status(404).send({ error: '_id: user not found' });
@@ -47,13 +50,16 @@ router.post('/', async (req, res) => {
   }
 
   try { // to create user
-    const result = await user.save();
     await user.save();
 
     const token = await user.generateAuthToken();
     res.append('Authorization', `Bearer ${token}`);
 
-    res.send(result);
+    res.send({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+    });
   } catch (err) {
     res.status(400).send({ error: err.message });
   }

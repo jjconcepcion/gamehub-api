@@ -36,6 +36,9 @@ describe('/api/users', async () => {
 
       expect(res.body.length).toBe(2);
 
+      delete user1.password;
+      delete user2.password;
+
       expect(res.body).toEqual(
         expect.arrayContaining([
           expect.objectContaining(user2),
@@ -68,7 +71,7 @@ describe('/api/users', async () => {
       const res = await getRequest(user._id);
 
       expect(Object.keys(res.body)).toEqual(
-        expect.arrayContaining(Object.keys(payload)),
+        expect.arrayContaining(['_id', 'name', 'email']),
       );
     });
 
@@ -130,7 +133,7 @@ describe('/api/users', async () => {
 
       const userInDb = await User.findOne({ email: payload.email });
 
-      ['name', 'email', 'password'].forEach((p) => {
+      ['name', 'email', '_id'].forEach((p) => {
         expect(userInDb).toHaveProperty(p);
       });
     });
@@ -138,7 +141,7 @@ describe('/api/users', async () => {
     it('should return created user', async () => {
       const res = await postRequest();
 
-      ['name', 'email', 'password'].forEach((p) => {
+      ['name', 'email', '_id'].forEach((p) => {
         expect(res.body).toHaveProperty(p);
       });
     });
