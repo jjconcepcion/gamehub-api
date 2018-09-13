@@ -49,6 +49,10 @@ router.post('/', async (req, res) => {
   try { // to create user
     const result = await user.save();
     await user.save();
+
+    const token = await user.generateAuthToken();
+    res.append('Authorization', `Bearer ${token}`);
+
     res.send(result);
   } catch (err) {
     res.status(400).send({ error: err.message });

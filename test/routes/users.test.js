@@ -1,5 +1,6 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 const api = require('../../index');
 const { User } = require('../../models/users');
 
@@ -183,6 +184,25 @@ describe('/api/users', async () => {
         .send(payload);
 
       expect(res.status).toBe(409);
+    });
+
+    it('should set authorization response header if valid request', async () => {
+      const res = await request(api)
+        .post('/api/users')
+        .send(payload);
+
+      expect(res.header.authorization).toBeDefined();
+    });
+
+    it('should return authorization token if valid request', async () => {
+      const res = await request(api)
+        .post('/api/users')
+        .send(payload);
+
+      const token = res.header.authorization.split(' ')[1];
+      const decoded = jwt.decode(token);
+
+      expect(decoded).toHaveProperty('_id');
     });
   });
 });
