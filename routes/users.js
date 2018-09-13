@@ -4,11 +4,13 @@ const { User } = require('../models/users');
 
 const router = express.Router();
 
+// G list of users
 router.get('/', async (req, res) => {
   const users = await User.find({}).sort('name');
   res.send(users);
 });
 
+// Get a user's details
 router.get('/:id', async (req, res) => {
   const validObjectId = mongoose.Types.ObjectId.isValid(req.params.id);
   if (!validObjectId) {
@@ -23,6 +25,7 @@ router.get('/:id', async (req, res) => {
   return res.send(user);
 });
 
+// Create a user
 router.post('/', async (req, res) => {
   const user = new User({
     name: req.body.name,
