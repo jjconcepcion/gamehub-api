@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const config = require('config');
 const { User } = require('../../models/users');
 
 describe('Users', () => {
@@ -98,7 +99,6 @@ describe('Users', () => {
 
   describe('generateAuthToken() instance method', () => {
     it('should encode the user id in the token payload', async () => {
-      const jwtPrivateKey = 'secret123';
       const data = {
         name: 'aaaa',
         email: 'a@mail.com',
@@ -108,7 +108,7 @@ describe('Users', () => {
       const token = await user.generateAuthToken();
 
       expect.assertions(1);
-      jwt.verify(token, jwtPrivateKey, (err, decode) => {
+      jwt.verify(token, config.get('jwtPrivateKey'), (err, decode) => {
         expect(decode).toHaveProperty('_id');
       });
     });
