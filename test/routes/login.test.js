@@ -60,5 +60,14 @@ describe('Login', async () => {
 
       expect(res.status).toBe(400);
     });
+
+    it('should return authorization token if login is valid', async () => {
+      const res = await loginRequest();
+
+      const [type, token] = res.header.authorization.split(' ');
+
+      expect(type).toBe('Bearer');
+      expect(token).toBeDefined();
+    });
   });
 });

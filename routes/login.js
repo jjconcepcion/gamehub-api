@@ -25,6 +25,9 @@ router.post('/', async (req, res) => {
     return res.status(400).send({ error: 'password: invalid password' });
   }
 
+  const token = await user.generateAuthToken();
+  res.append('Authorization', `Bearer ${token}`);
+
   return res.send();
 });
 
