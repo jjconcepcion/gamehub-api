@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const { User } = require('../models/users');
 
 const router = express.Router();
@@ -49,9 +50,16 @@ router.post('/', async (req, res) => {
     return res.status(409).send({ error: 'name: is unavailable' });
   }
 
-  try { // to create user
+  try {
+    // genereate hash from plaintext password
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+
+    // create user in database
+    user.password = hashedPassword;
     await user.save();
 
+    // return auth token
     const token = await user.generateAuthToken();
     res.append('Authorization', `Bearer ${token}`);
 

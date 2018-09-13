@@ -1,6 +1,7 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const api = require('../../index');
 const { User } = require('../../models/users');
 
@@ -187,6 +188,18 @@ describe('/api/users', async () => {
       const decoded = jwt.decode(token);
 
       expect(decoded).toHaveProperty('_id');
+    });
+
+    it('should hash the user password', async () => {
+      const res = await postRequest();
+
+      const saved = await User.findOne({ _id: res.body._id }).select('password');
+
+      const plaintext = payload.password;
+      const hashed = saved.password;
+      const match = await bcrypt.compare(plaintext, hashed);
+
+      expect(match).toBeTruthy();
     });
   });
 });
