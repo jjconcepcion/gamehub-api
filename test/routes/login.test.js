@@ -52,5 +52,13 @@ describe('Login', async () => {
 
       expect(res.status).toBe(404);
     });
+
+    it('should return 400 if password is incorrect', async () => {
+      payload.password = 'a';
+
+      const res = await loginRequest();
+
+      expect(res.status).toBe(400);
+    });
   });
 });
