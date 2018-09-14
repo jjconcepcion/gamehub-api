@@ -4,7 +4,8 @@ const logger = require('./logger');
 
 function connect() {
   const db = config.get('db');
-  mongoose.connect(db).then(() => logger.info(`Connected to ${db}`));
+  mongoose.connect(db, { useNewUrlParser: true })
+    .then(() => logger.info(`Connected to ${db}`));
 }
 
 module.exports = connect;
