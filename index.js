@@ -2,19 +2,12 @@ const express = require('express');
 const config = require('config');
 const logger = require('./init/logger');
 const connectToDatabase = require('./init/db');
-const home = require('./routes/home');
-const users = require('./routes/users');
-const login = require('./routes/login');
+const useRoutes = require('./routes');
 
 const app = express();
 
 connectToDatabase();
-
-app.use(express.json());
-
-app.use('/', home);
-app.use('/api/users', users);
-app.use('/api/login', login);
+useRoutes(app);
 
 const port = process.env.PORT || config.get('listenPort');
 
