@@ -51,6 +51,8 @@ router.post('/', async (req, res) => {
   }
 
   try {
+    await user.validate();
+
     // genereate hash from plaintext password
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
