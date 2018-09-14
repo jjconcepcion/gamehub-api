@@ -69,5 +69,12 @@ describe('Login', async () => {
       expect(type).toBe('Bearer');
       expect(token).toBeDefined();
     });
+
+    it('should return user name and id if valid', async () => {
+      const res = await loginRequest();
+
+      expect(res.body._id).toBeDefined();
+      expect(res.body.name).toBe(payload.name);
+    });
   });
 });

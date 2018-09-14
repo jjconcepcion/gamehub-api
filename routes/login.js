@@ -28,7 +28,10 @@ router.post('/', async (req, res) => {
   const token = await user.generateAuthToken();
   res.append('Authorization', `Bearer ${token}`);
 
-  return res.send();
+  return res.send({
+    _id: user._id,
+    name: user.name,
+  });
 });
 
 module.exports = router;
