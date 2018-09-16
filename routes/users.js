@@ -37,44 +37,43 @@ router.post('/', async (req, res) => {
     password: req.body.password,
   });
 
-  const checkUserExists = [
+  try {
+    await user.validate();
+  } catch (err) {
+    return res.status(400).send({ error: err.message });
+  }
+
+  const userLookup = [
     User.findOne({ email: req.body.email }).select('email'),
     User.findOne({ name: req.body.name }).select('name'),
   ];
 
-  const results = await Promise.all(checkUserExists);
-  if (results[0]) {
+  const [email, name] = await Promise.all(userLookup);
+
+  if (email) {
     return res.status(409).send({ error: 'email: is already registered' });
   }
-  if (results[1]) {
+  if (name) {
     return res.status(409).send({ error: 'name: is unavailable' });
   }
 
-  try {
-    await user.validate();
+  // genereate hash from plaintext password
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
 
-    // genereate hash from plaintext password
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+  // create user in database
+  user.password = hashedPassword;
+  await user.save();
 
-    // create user in database
-    user.password = hashedPassword;
-    await user.save();
+  // return auth token
+  const token = await user.generateAuthToken();
+  res.append('Authorization', `Bearer ${token}`);
 
-    // return auth token
-    const token = await user.generateAuthToken();
-    res.append('Authorization', `Bearer ${token}`);
-
-    res.send({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-    });
-  } catch (err) {
-    res.status(400).send({ error: err.message });
-  }
-
-  return undefined;
+  return res.send({
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+  });
 });
 
 module.exports = router;
