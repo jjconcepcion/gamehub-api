@@ -37,7 +37,7 @@ Auth
 Login a user
 ----------------------
     method: POST
-    url: /api/auth
+    url: /api/login
 
 ======================
 Games
