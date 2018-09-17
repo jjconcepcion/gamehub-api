@@ -3,6 +3,7 @@ const home = require('./home');
 const users = require('./users');
 const login = require('./login');
 const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 
 module.exports = function initializeRoutes(app) {
   app.use(express.json());
@@ -12,4 +13,6 @@ module.exports = function initializeRoutes(app) {
 
   // test route for auth middleware
   app.use('/api/protected', auth, home);
+  // test route for admin middleware
+  app.use('/api/admin', auth, admin, home);
 };
