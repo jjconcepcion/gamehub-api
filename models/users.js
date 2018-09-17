@@ -30,13 +30,20 @@ const userSchema = mongoose.Schema({
     required: true,
     minlength: [8, 'must be at leat 8 characters in length'],
   },
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // Returns a Promise which resolves a signed JSONWebToken or rejects with
 // and error
 userSchema.methods.generateAuthToken = function generateAuthToken() {
   return new Promise((resolve, reject) => {
-    jwt.sign({ _id: this._id }, config.get('jwtPrivateKey'), (err, token) => {
+    jwt.sign({
+      _id: this._id,
+      isAdmin: this.isAdmin,
+    }, config.get('jwtPrivateKey'), (err, token) => {
       if (err) {
         reject(err);
       } else {
