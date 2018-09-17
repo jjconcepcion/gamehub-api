@@ -21,7 +21,7 @@ function auth(req, res, next) {
 
   jwt.verify(token, config.get('jwtPrivateKey'), (err, decoded) => {
     if (err) {
-      res.status(401).send({ error: 'invalid authorization token' });
+      return res.status(401).send({ error: 'invalid authorization token' });
     }
 
     req.user = decoded;
