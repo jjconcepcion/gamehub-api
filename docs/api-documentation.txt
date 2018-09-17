@@ -4,31 +4,42 @@ Gamehub API
 Users
 ======================
 
+An admin shall be logged in to:
+    - get list of users
+    - get a user's information
+    - delete a user
+
+A user shall be logged in to update his or her information
+
 Get list of Users
 ----------------------
+    authentication: admin
     method: GET
     url: /api/users
 
 Show user details
 ----------------------
+    authentication: admin
     method: GET
-    url: /api/users/:id
-
-Create a user
-----------------------
-    method: POST
-    url: /api/users
-
-Update user details
-----------------------
-    method: PUT
     url: /api/users/:id
 
 Delete a user
 ----------------------
+    authentication: admin
     method: DELETE
     url: /api/users/:id
 
+Update user details
+----------------------
+    authentication: user
+    method: PUT
+    url: /api/users/:id
+
+Create a user
+----------------------
+    authentication: none
+    method: POST
+    url: /api/users
 
 ======================
 Auth
@@ -36,6 +47,7 @@ Auth
 
 Login a user
 ----------------------
+    authentication: none
     method: POST
     url: /api/login
 
@@ -43,28 +55,38 @@ Login a user
 Games
 ======================
 
+A user shall be an admin to:
+    -create a game,
+    -update a game,
+    -delete a game
+
 Get list of available game types
 ----------------------
+    authentication: none
     method: GET
     url: /api/games
 
 Get game details
 ----------------------
+    authentication: none
     method: GET
     url: /api/games/:id
 
 Create a game type
 ----------------------
+    authentication: admin
     method: POST
     url: /api/games/:id
 
 Update a game
 ----------------------
+    authentication: admin
     method: PUT
     url: /api/games/:id
 
 Delete a game
 ----------------------
+    authentication: admin
     method: DELETE
     url: /api/games/:id
 
@@ -73,22 +95,32 @@ Delete a game
 Rooms
 ======================
 
+A user shall be logged in to:
+    -get a list of game rooms
+    -get room information
+    -create a room
+    -delete a room that he/she is owner of
+
 Get a list of game rooms
 ----------------------
+    authentication: user
     method: GET
     url: /api/rooms/
 
 Get room details
 ----------------------
+    authentication: user
     method: GET
     url: /api/rooms/:id
 
 Create a room
 ----------------------
+    authentication: user
     method: POST
     url: /api/rooms/
 
 Delete a room
 ----------------------
+    authentication: user
     method: DELETE
     url: /api/rooms/:id
