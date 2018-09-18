@@ -2,11 +2,13 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const { User } = require('../models/users');
+const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 
 const router = express.Router();
 
 // G list of users
-router.get('/', async (req, res) => {
+router.get('/', auth, admin, async (req, res) => {
   const users = await User.find({})
     .sort('name')
     .select('_id name email');
@@ -14,7 +16,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get a user's details
-router.get('/:id', async (req, res) => {
+router.get('/:id', auth, admin, async (req, res) => {
   const validObjectId = mongoose.Types.ObjectId.isValid(req.params.id);
   if (!validObjectId) {
     return res.status(400).send({ error: '_id: invalid syntax' });
