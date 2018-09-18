@@ -78,4 +78,23 @@ router.post('/', async (req, res) => {
   });
 });
 
+router.delete('/:id', auth, admin, async (req, res) => {
+  let deleted;
+  try {
+    deleted = await User.findByIdAndRemove(req.params.id)
+      .select('_id name email');
+  } catch (err) {
+    if (err.name === 'CastError') {
+      // treat syntactically invalid id as nonexistent
+      deleted = false;
+    }
+  }
+
+  if (!deleted) {
+    return res.status(404).send({ error: 'user not found' });
+  }
+
+  return res.send(deleted);
+});
+
 module.exports = router;
