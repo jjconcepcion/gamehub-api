@@ -5,13 +5,17 @@ const { User } = require('../../models/users');
 
 describe('GET methods on /api/users', async () => {
   let payload;
+  let user;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     payload = {
       name: 'aaaa',
       email: 'a@mail.com',
       password: '12345678',
     };
+
+    user = new User(payload);
+    await user.save();
   });
 
   afterEach(async () => {
@@ -19,25 +23,29 @@ describe('GET methods on /api/users', async () => {
     await User.remove({});
   });
 
+  const getRequest = id => request(api)
+    .get(`/api/users/${id}`);
+
   //
   // GET /api/users
   //
   describe('GET /', async () => {
     it('should return list of users', async () => {
+      // populate database
       const user1 = { name: 'user1', email: 'a@mail.com', password: 'password1' };
       const user2 = { name: 'user2', email: 'b@mail.com', password: 'password2' };
-
       await User.insertMany([user1, user2]);
 
-      const res = await request(api).get('/api/users');
+      const res = await getRequest('');
 
       expect(res.status).toBe(200);
 
-      expect(res.body.length).toBe(2);
+      // db should have 3 users: 2 inserted in this test, 1 created in beforeEach
+      expect(res.body.length).toBe(3);
 
       delete user1.password;
       delete user2.password;
-
+      // check that elements returned have name and email properties
       expect(res.body).toEqual(
         expect.arrayContaining([
           expect.objectContaining(user2),
@@ -51,22 +59,13 @@ describe('GET methods on /api/users', async () => {
   // GET /api/users/:id
   //
   describe('GET /:id', async () => {
-    const getRequest = id => request(api)
-      .get(`/api/users/${id}`);
-
     it('should return 200 if id references a valid user', async () => {
-      const user = new User(payload);
-      await user.save();
-
       const res = await getRequest(user._id);
 
       expect(res.status).toBe(200);
     });
 
     it('should return user if id is valid', async () => {
-      const user = new User(payload);
-      await user.save();
-
       const res = await getRequest(user._id);
 
       expect(Object.keys(res.body)).toEqual(
