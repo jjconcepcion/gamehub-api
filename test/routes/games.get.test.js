@@ -58,5 +58,13 @@ describe('GET methods on /api/games', () => {
 
       expect(res.status).toBe(200);
     });
+
+    it('shoud return 400 if provided with invalid id', async () => {
+      const id = 1;
+
+      const res = await request(api).get(`/api/games/${id}`);
+
+      expect(res.status).toBe(400);
+    });
   });
 });
