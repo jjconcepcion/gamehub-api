@@ -11,4 +11,9 @@ router.get('/', async (req, res) => {
   res.send(games);
 });
 
+router.get('/:id', async (req, res) => {
+  res.send();
+});
+
+
 module.exports = router;

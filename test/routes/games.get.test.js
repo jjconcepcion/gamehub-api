@@ -4,6 +4,7 @@ const { Game } = require('../../models/games');
 
 describe('GET methods on /api/games', () => {
   let games;
+  let gamesInDb;
 
   beforeEach(async () => {
     games = [{
@@ -19,7 +20,7 @@ describe('GET methods on /api/games', () => {
       maxPlayers: 2,
     }];
 
-    await Game.insertMany(games);
+    gamesInDb = await Game.insertMany(games);
   });
 
   afterEach(async () => {
@@ -45,6 +46,17 @@ describe('GET methods on /api/games', () => {
       res.body.forEach((game) => {
         properties.forEach(p => expect(game).toHaveProperty(p));
       });
+    });
+  });
+
+  // GET /api/games/:id
+  describe('Get game details', () => {
+    it('shoud return 200 if valid request', async () => {
+      const id = gamesInDb[0]._id;
+
+      const res = await request(api).get(`/api/games/${id}`);
+
+      expect(res.status).toBe(200);
     });
   });
 });
