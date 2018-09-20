@@ -12,17 +12,21 @@ describe('PUT /api/users/:id', async () => {
   let payload;
 
   beforeEach(async () => {
-    const data = {
+    // user to be updated
+    user = new User({
       name: 'aaaa',
       email: 'a@mail.com',
       password: '12345678',
-    };
+    });
 
-    // user to be updated
-    user = new User(data);
-    await user.save();
+    const generateUserToken = () => user.generateAuthToken();
 
-    token = await user.generateAuthToken();
+    const testSetup = [
+      user.save(),
+      generateUserToken(),
+    ];
+
+    [user, token] = await Promise.all(testSetup);
 
     id = user._id;
 

@@ -21,14 +21,20 @@ describe('GET methods on /api/users', async () => {
 
     // create a regular user
     user = new User(payload);
-    await user.save();
 
-    userToken = await user.generateAuthToken();
-
-    adminToken = await jwt.sign({
+    const generateUserToken = () => user.generateAuthToken();
+    const generateAdminToken = () => jwt.sign({
       _id: 1,
       isAdmin: true,
     }, config.get('jwtPrivateKey'));
+
+    const testSetup = [
+      user.save(),
+      generateUserToken(),
+      generateAdminToken(),
+    ];
+
+    [user, userToken, adminToken] = await Promise.all(testSetup);
 
     token = adminToken;
   });
