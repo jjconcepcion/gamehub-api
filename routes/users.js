@@ -97,4 +97,39 @@ router.delete('/:id', auth, admin, async (req, res) => {
   return res.send(deleted);
 });
 
+router.put('/:id', auth, async (req, res) => {
+  // not authenticated as the user being updated
+  if (req.user._id !== req.params.id) {
+    return res.status(403).send({ error: 'access denied' });
+  }
+
+  let user = await User.findById(req.params.id);
+
+  // user record not found in database
+  if (!user) {
+    return res.status(404).send({ error: 'user not found' });
+  }
+
+  const oldEmail = user.email;
+  user.email = req.body.email;
+  try {
+    await user.validate();
+  } catch (err) {
+    return res.status(400).send({ error: err.message });
+  }
+
+  const emailExists = await User.findOne({ email: req.body.email });
+  if (emailExists && req.body.email !== oldEmail) {
+    return res.status(409).send({ error: 'email: is already registered' });
+  }
+
+  user = await user.save();
+
+  return res.send({
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+  });
+});
+
 module.exports = router;
