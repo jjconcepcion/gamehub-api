@@ -19,13 +19,14 @@ router.get('/:id', async (req, res) => {
     return res.status(400).send({ error: '_id: invalid syntax' });
   }
 
-  const game = await Game.findOne({ _id: req.params.id });
+  const game = await Game.findOne({ _id: req.params.id })
+    .select('_id name description minPlayers maxPlayers');
 
   if (!game) {
     return res.status(404).send({ error: '_id: game not found' });
   }
 
-  return res.send();
+  return res.send(game);
 });
 
 

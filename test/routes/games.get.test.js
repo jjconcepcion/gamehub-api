@@ -75,5 +75,16 @@ describe('GET methods on /api/games', () => {
 
       expect(res.status).toBe(404);
     });
+
+    it('should return game if valid', async () => {
+      const id = gamesInDb[0]._id;
+
+      const res = await request(api).get(`/api/games/${id}`);
+
+      const properties = Object.keys(games[0]);
+      properties.push('_id');
+
+      properties.forEach(p => expect(res.body).toHaveProperty(p));
+    });
   });
 });
