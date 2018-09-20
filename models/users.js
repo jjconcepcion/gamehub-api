@@ -42,6 +42,7 @@ userSchema.methods.generateAuthToken = function generateAuthToken() {
   return new Promise((resolve, reject) => {
     jwt.sign({
       _id: this._id,
+      name: this.name,
       isAdmin: this.isAdmin,
     }, config.get('jwtPrivateKey'), (err, token) => {
       if (err) {

@@ -98,7 +98,7 @@ describe('Users', async () => {
   });
 
   describe('generateAuthToken() instance method', async () => {
-    it('should encode the user id in the token payload', async () => {
+    it('should encode the user details in the token payload', async () => {
       const data = {
         name: 'aaaa',
         email: 'a@mail.com',
@@ -107,9 +107,10 @@ describe('Users', async () => {
       const user = new User(data);
       const token = await user.generateAuthToken();
 
-      expect.assertions(1);
+      expect.assertions(2);
       jwt.verify(token, config.get('jwtPrivateKey'), (err, decode) => {
         expect(decode).toHaveProperty('_id');
+        expect(decode).toHaveProperty('name');
       });
     });
   });
