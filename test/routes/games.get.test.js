@@ -1,4 +1,5 @@
 const request = require('supertest');
+const mongoose = require('mongoose');
 const api = require('../../index');
 const { Game } = require('../../models/games');
 
@@ -65,6 +66,14 @@ describe('GET methods on /api/games', () => {
       const res = await request(api).get(`/api/games/${id}`);
 
       expect(res.status).toBe(400);
+    });
+
+    it('should return 404 if game not found in database', async () => {
+      const id = new mongoose.Types.ObjectId();
+
+      const res = await request(api).get(`/api/games/${id}`);
+
+      expect(res.status).toBe(404);
     });
   });
 });

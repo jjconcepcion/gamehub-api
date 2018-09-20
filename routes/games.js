@@ -15,11 +15,17 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   const validId = mongoose.Types.ObjectId.isValid(req.params.id);
 
-  if(!validId) {
+  if (!validId) {
     return res.status(400).send({ error: '_id: invalid syntax' });
   }
 
-  res.send();
+  const game = await Game.findOne({ _id: req.params.id });
+
+  if (!game) {
+    return res.status(404).send({ error: '_id: game not found' });
+  }
+
+  return res.send();
 });
 
 
