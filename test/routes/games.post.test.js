@@ -92,4 +92,12 @@ describe('POST method on /api/games', async () => {
 
     fields.forEach(p => expect(res.body).toHaveProperty(p));
   });
+
+  it('should save game in database', async () => {
+    const res = await postRequest();
+
+    const saved = await Game.findOne({ _id: res.body._id });
+
+    expect(saved).toBeTruthy();
+  });
 });
