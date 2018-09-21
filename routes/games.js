@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const { Game, fields } = require('../models/games');
+const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 
 const router = express.Router();
 
@@ -29,9 +31,9 @@ router.get('/:id', async (req, res) => {
   return res.send(game);
 });
 
-router.post('/', (req, res) => {
+router.post('/', auth, admin, (req, res) => {
   res.send();
-})
+});
 
 
 module.exports = router;
