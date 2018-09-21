@@ -30,3 +30,4 @@ const gamesSchema = new mongoose.Schema({
 });
 
 module.exports.Game = mongoose.model('Game', gamesSchema);
+module.exports.fields = Object.keys(gamesSchema.paths);

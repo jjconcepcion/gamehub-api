@@ -1,7 +1,7 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
 const api = require('../../index');
-const { Game } = require('../../models/games');
+const { Game, fields } = require('../../models/games');
 
 describe('GET methods on /api/games', () => {
   let games;
@@ -41,11 +41,8 @@ describe('GET methods on /api/games', () => {
 
       expect(res.body.length).toBe(games.length);
 
-      const properties = Object.keys(games[0]);
-      properties.push('_id');
-
       res.body.forEach((game) => {
-        properties.forEach(p => expect(game).toHaveProperty(p));
+        fields.forEach(p => expect(game).toHaveProperty(p));
       });
     });
   });
@@ -81,10 +78,7 @@ describe('GET methods on /api/games', () => {
 
       const res = await request(api).get(`/api/games/${id}`);
 
-      const properties = Object.keys(games[0]);
-      properties.push('_id');
-
-      properties.forEach(p => expect(res.body).toHaveProperty(p));
+      fields.forEach(p => expect(res.body).toHaveProperty(p));
     });
   });
 });
