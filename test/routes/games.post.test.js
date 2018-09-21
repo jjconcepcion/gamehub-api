@@ -2,7 +2,7 @@ const request = require('supertest');
 const config = require('config');
 const jwt = require('jsonwebtoken');
 const api = require('../../index');
-const { Game } = require('../../models/games');
+const { Game, fields } = require('../../models/games');
 
 describe('POST method on /api/games', async () => {
   let token;
@@ -41,7 +41,7 @@ describe('POST method on /api/games', async () => {
       description: 'lorem ipsum',
       minPlayers: 2,
       maxPlayers: 2,
-    }
+    };
   });
 
   const postRequest = () => request(api)
@@ -85,5 +85,11 @@ describe('POST method on /api/games', async () => {
     const res = await postRequest();
 
     expect(res.status).toBe(409);
+  });
+
+  it('should return saved game', async () => {
+    const res = await postRequest();
+
+    fields.forEach(p => expect(res.body).toHaveProperty(p));
   });
 });

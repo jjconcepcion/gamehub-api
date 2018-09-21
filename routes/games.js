@@ -32,7 +32,7 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', auth, admin, async (req, res) => {
-  const game = new Game({
+  let game = new Game({
     name: req.body.name,
     description: req.body.description,
     minPlayers: req.body.minPlayers,
@@ -50,8 +50,10 @@ router.post('/', auth, admin, async (req, res) => {
   if (gameInDb) {
     return res.status(409).send({ error: 'name: already exists' });
   }
-  
-  return res.send();
+
+  game = await game.save();
+
+  return res.send(game);
 });
 
 
