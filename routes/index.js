@@ -5,9 +5,11 @@ const login = require('./login');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
 const games = require('./games');
+const jsonSyntaxError = require('../middleware/jsonSyntaxError');
 
 module.exports = function initializeRoutes(app) {
   app.use(express.json());
+  app.use(jsonSyntaxError);
   app.use('/', home);
   app.use('/api/users', users);
   app.use('/api/login', login);
