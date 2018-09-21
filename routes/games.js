@@ -31,8 +31,21 @@ router.get('/:id', async (req, res) => {
   return res.send(game);
 });
 
-router.post('/', auth, admin, (req, res) => {
-  res.send();
+router.post('/', auth, admin, async (req, res) => {
+  const game = new Game({
+    name: req.body.name,
+    description: req.body.description,
+    minPlayers: req.body.minPlayers,
+    maxPlayers: req.body.maxPlayers,
+  });
+
+  try {
+    await game.validate();
+  } catch (err) {
+    return res.status(400).send({ error: err.message });
+  }
+
+  return res.send();
 });
 
 
