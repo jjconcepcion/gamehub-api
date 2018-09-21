@@ -45,6 +45,12 @@ router.post('/', auth, admin, async (req, res) => {
     return res.status(400).send({ error: err.message });
   }
 
+  const gameInDb = await Game.findOne({ name: req.body.name });
+
+  if (gameInDb) {
+    return res.status(409).send({ error: 'name: already exists' });
+  }
+  
   return res.send();
 });
 

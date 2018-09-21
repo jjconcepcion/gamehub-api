@@ -2,6 +2,7 @@ const request = require('supertest');
 const config = require('config');
 const jwt = require('jsonwebtoken');
 const api = require('../../index');
+const { Game } = require('../../models/games');
 
 describe('POST method on /api/games', async () => {
   let token;
@@ -28,6 +29,8 @@ describe('POST method on /api/games', async () => {
   });
 
   beforeEach(async () => {
+    await Game.remove({});
+
     token = adminToken;
 
     payload = {
@@ -70,5 +73,14 @@ describe('POST method on /api/games', async () => {
     const res = await postRequest();
 
     expect(res.status).toBe(400);
+  });
+
+  it('should return 409 if game name already in database', async () => {
+    payload.name = 'exists';
+    await new Game(payload).save();
+
+    const res = await postRequest();
+
+    expect(res.status).toBe(409);
   });
 });
