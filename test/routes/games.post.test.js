@@ -10,16 +10,19 @@ describe('POST method on /api/games', async () => {
   let userToken;
   let payload;
 
-  beforeAll(async () => {
-    const generateUserToken = () => jwt.sign({
-      _id: 1,
-      isAdmin: false,
-    }, config.get('jwtPrivateKey'));
-    const generateAdminToken = () => jwt.sign({
-      _id: 1,
-      isAdmin: true,
-    }, config.get('jwtPrivateKey'));
+  const generateUserToken = () => jwt.sign({
+    _id: 1,
+    isAdmin: false,
+  }, config.get('jwtPrivateKey'));
 
+  const generateAdminToken = () => jwt.sign({
+    _id: 1,
+    isAdmin: true,
+  }, config.get('jwtPrivateKey'));
+
+  const cleanUpDb = () => Game.remove({});
+
+  beforeAll(async () => {
     const generateTokens = [
       generateUserToken(),
       generateAdminToken(),
@@ -29,7 +32,7 @@ describe('POST method on /api/games', async () => {
   });
 
   beforeEach(async () => {
-    await Game.remove({});
+    await cleanUpDb();
 
     token = adminToken;
 
