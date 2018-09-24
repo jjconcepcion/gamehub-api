@@ -156,4 +156,14 @@ describe('PUT /api/games/:id', async () => {
 
     expect(res.status).toBe(400);
   });
+
+  it('should update the game details', async () => {
+    payload.name = 'newName';
+
+    await putRequest();
+
+    const gameInDb = await Game.findOne({ _id: game._id });
+
+    expect(gameInDb.name).toBe('newName');
+  });
 });

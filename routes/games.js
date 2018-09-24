@@ -80,6 +80,8 @@ router.put('/:id', auth, admin, async (req, res) => {
     return res.status(400).send(err.message);
   }
 
+  await gameInDb.save();
+
   return res.send();
 });
 
