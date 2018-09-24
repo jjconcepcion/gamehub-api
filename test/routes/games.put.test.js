@@ -3,7 +3,7 @@ const config = require('config');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const api = require('../../index');
-const { Game } = require('../../models/games');
+const { Game, fields } = require('../../models/games');
 
 describe('PUT /api/games/:id', async () => {
   let id;
@@ -49,6 +49,10 @@ describe('PUT /api/games/:id', async () => {
     payload = data;
   });
 
+  afterEach(async () => {
+    await Game.remove({});
+  })
+  
   const putRequest = () => request(api)
     .put(`/api/games/${id}`)
     .set('Authorization', `Bearer ${token}`)
@@ -165,5 +169,14 @@ describe('PUT /api/games/:id', async () => {
     const gameInDb = await Game.findOne({ _id: game._id });
 
     expect(gameInDb.name).toBe('newName');
+  });
+
+  it('should return the updated game', async () => {
+    payload.name = 'newName';
+
+    const res = await putRequest();
+
+    fields.forEach(p => expect(res.body).toHaveProperty(p));
+    expect(res.body.name).toBe('newName');
   });
 });
