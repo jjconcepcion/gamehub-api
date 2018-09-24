@@ -45,6 +45,7 @@ router.post('/', auth, admin, async (req, res) => {
     return res.status(400).send({ error: err.message });
   }
 
+
   const gameInDb = await Game.findOne({ name: req.body.name });
 
   if (gameInDb) {
@@ -56,5 +57,8 @@ router.post('/', auth, admin, async (req, res) => {
   return res.send(game);
 });
 
+router.put('/:id', (req, res) => {
+  res.send();
+});
 
 module.exports = router;
