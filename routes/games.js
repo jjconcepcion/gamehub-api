@@ -57,8 +57,19 @@ router.post('/', auth, admin, async (req, res) => {
   return res.send(game);
 });
 
-router.put('/:id', auth, admin, (req, res) => {
-  res.send();
+router.put('/:id', auth, admin, async (req, res) => {
+  const validId = mongoose.Types.ObjectId.isValid(req.params.id);
+  if (!validId) {
+    return res.status(404).send({ error: '_id: game not found' });
+  }
+
+  const gameInDb = await Game.findOne({ _id: req.params.id });
+
+  if (!gameInDb) {
+    return res.status(404).send({ error: '_id: game not found' });
+  }
+
+  return res.send();
 });
 
 module.exports = router;

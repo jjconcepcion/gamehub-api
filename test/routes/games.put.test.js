@@ -1,13 +1,17 @@
 const request = require('supertest');
 const config = require('config');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const api = require('../../index');
+const { Game } = require('../../models/games');
 
 describe('PUT /api/games/:id', async () => {
   let id;
   let token;
   let userToken;
   let adminToken;
+  let data;
+  let game;
 
   const generateUserToken = () => jwt.sign({
     _id: 1,
@@ -28,8 +32,19 @@ describe('PUT /api/games/:id', async () => {
     [userToken, adminToken] = await Promise.all(generateTokens);
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     token = adminToken;
+
+    data = {
+      name: 'aaa',
+      description: 'lorem ipsum',
+      minPlayers: 2,
+      maxPlayers: 2,
+    };
+
+    game = await new Game(data).save();
+
+    id = game._id;
   });
 
   const putRequest = () => request(api)
@@ -57,5 +72,21 @@ describe('PUT /api/games/:id', async () => {
     const res = await putRequest();
 
     expect(res.status).toBe(403);
+  });
+
+  it('should return 404 if game not in database', async () => {
+    id = new mongoose.Types.ObjectId();
+
+    const res = await putRequest();
+
+    expect(res.status).toBe(404);
+  });
+
+  it('should return 404 if not valid game id', async () => {
+    id = 1;
+
+    const res = await putRequest();
+
+    expect(res.status).toBe(404);
   });
 });
