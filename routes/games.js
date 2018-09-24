@@ -57,7 +57,7 @@ router.post('/', auth, admin, async (req, res) => {
   return res.send(game);
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', auth, admin, (req, res) => {
   res.send();
 });
 
