@@ -69,6 +69,17 @@ router.put('/:id', auth, admin, async (req, res) => {
     return res.status(404).send({ error: '_id: game not found' });
   }
 
+  gameInDb.name = req.body.name;
+  gameInDb.description = req.body.description;
+  gameInDb.minPlayers = req.body.minPlayers;
+  gameInDb.maxPlayers = req.body.maxPlayers;
+
+  try {
+    await gameInDb.validate();
+  } catch (err) {
+    return res.status(400).send(err.message);
+  }
+
   return res.send();
 });
 

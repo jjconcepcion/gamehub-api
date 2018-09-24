@@ -12,6 +12,7 @@ describe('PUT /api/games/:id', async () => {
   let adminToken;
   let data;
   let game;
+  let payload;
 
   const generateUserToken = () => jwt.sign({
     _id: 1,
@@ -45,12 +46,13 @@ describe('PUT /api/games/:id', async () => {
     game = await new Game(data).save();
 
     id = game._id;
+    payload = data;
   });
 
   const putRequest = () => request(api)
     .put(`/api/games/${id}`)
     .set('Authorization', `Bearer ${token}`)
-    .send();
+    .send(payload);
 
   it('should return 200 if valid', async () => {
     const res = await putRequest();
@@ -88,5 +90,70 @@ describe('PUT /api/games/:id', async () => {
     const res = await putRequest();
 
     expect(res.status).toBe(404);
+  });
+
+  it('should return 400 if name is not provided', async () => {
+    delete payload.name;
+
+    const res = await putRequest();
+
+    expect(res.status).toBe(400);
+  });
+
+  it('should return 400 if description is not provided', async () => {
+    delete payload.description;
+
+    const res = await putRequest();
+
+    expect(res.status).toBe(400);
+  });
+
+  it('should return 400 if minPlayers is not provided', async () => {
+    delete payload.minPlayers;
+
+    const res = await putRequest();
+
+    expect(res.status).toBe(400);
+  });
+
+  it('should return 400 if maxPlayers is not provided', async () => {
+    delete payload.maxPlayers;
+
+    const res = await putRequest();
+
+    expect(res.status).toBe(400);
+  });
+
+  it('should return 400 if name is shorter than 3 characters', async () => {
+    payload.name = 'aa';
+
+    const res = await putRequest();
+
+    expect(res.status).toBe(400);
+  });
+
+  it('should return 400 description is shorter than 3 characters', async () => {
+    payload.description = 'aa';
+
+    const res = await putRequest();
+
+    expect(res.status).toBe(400);
+  });
+
+  it('should return 400 minPlayers is less than 1', async () => {
+    payload.minPlayers = 0;
+
+    const res = await putRequest();
+
+    expect(res.status).toBe(400);
+  });
+
+  it('should return 400 maxPlayers is less than minPlayers', async () => {
+    payload.minPlayers = 2;
+    payload.maxPlayers = 1;
+
+    const res = await putRequest();
+
+    expect(res.status).toBe(400);
   });
 });
