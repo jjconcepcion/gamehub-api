@@ -85,7 +85,18 @@ router.put('/:id', auth, admin, async (req, res) => {
   return res.send(updatedGame);
 });
 
-router.delete('/:id', auth, admin, (req, res) => {
+router.delete('/:id', auth, admin, async (req, res) => {
+  const validId = mongoose.Types.ObjectId.isValid(req.params.id);
+
+  if (!validId) {
+    return res.status(404).send({ error: '_id: game not found' });
+  }
+  const gameInDb = await Game.findOne({ _id: req.params.id });
+
+  if (!gameInDb) {
+    return res.status(404).send({ error: '_id: game not found' });
+  }
+
   return res.send();
 });
 
