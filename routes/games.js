@@ -97,7 +97,9 @@ router.delete('/:id', auth, admin, async (req, res) => {
     return res.status(404).send({ error: '_id: game not found' });
   }
 
-  return res.send();
+  const deleted = await Game.findByIdAndRemove(req.params.id);
+
+  return res.send(deleted);
 });
 
 module.exports = router;

@@ -3,7 +3,7 @@ const config = require('config');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const api = require('../../index');
-const { Game } = require('../../models/games');
+const { Game, fields } = require('../../models/games');
 
 describe('DELETE /api/games/:id', async () => {
   let id;
@@ -88,5 +88,23 @@ describe('DELETE /api/games/:id', async () => {
     const res = await deleteRequest();
 
     expect(res.status).toBe(404);
+  });
+
+  it('should delete the game from the database', async () => {
+    id = game._id;
+
+    await deleteRequest();
+
+    const gameInDb = await Game.findById(id);
+
+    expect(gameInDb).toBeNull();
+  });
+
+  it('should return the game from the database', async () => {
+    id = game._id;
+
+    const res = await deleteRequest();
+
+    fields.forEach(p => expect(res.body).toHaveProperty(p));
   });
 });
