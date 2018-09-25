@@ -85,4 +85,8 @@ router.put('/:id', auth, admin, async (req, res) => {
   return res.send(updatedGame);
 });
 
+router.delete('/:id', auth, admin, (req, res) => {
+  return res.send();
+});
+
 module.exports = router;
