@@ -51,8 +51,8 @@ describe('PUT /api/games/:id', async () => {
 
   afterEach(async () => {
     await Game.remove({});
-  })
-  
+  });
+
   const putRequest = () => request(api)
     .put(`/api/games/${id}`)
     .set('Authorization', `Bearer ${token}`)
