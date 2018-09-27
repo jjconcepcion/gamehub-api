@@ -1,10 +1,10 @@
 # User
 
-- [Create](##Create)
-- [List](##List)
-- [Show](##Show)
-- [Update](##Update)
-- [Delete](##Delete)
+- [Create](#create)
+- [List](#list)
+- [Show](#show)
+- [Update](#update)
+- [Delete](#delete)
 
 ## Create
 
