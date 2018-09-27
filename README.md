@@ -5,4 +5,5 @@ Mongoose, and MongoDB.
 
 
 ## API Documentantation
-* ### [Login](docs/login.md)
+- [Login](docs/login.md)
+- [Users](docs/users.md)
