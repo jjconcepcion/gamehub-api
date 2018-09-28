@@ -10,6 +10,10 @@ const roomsSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
+  game: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
 });
 
 module.exports.Room = mongoose.model('Room', roomsSchema);

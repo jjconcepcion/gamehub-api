@@ -8,6 +8,7 @@ describe('Rooms', async () => {
     data = {
       name: 'Room name',
       owner: new mongoose.Types.ObjectId(),
+      game: new mongoose.Types.ObjectId(),
     };
   });
 
@@ -29,5 +30,15 @@ describe('Rooms', async () => {
     expect.assertions(1);
     await room.validate()
       .catch((err) => { expect(err.errors.owner).toBeDefined(); });
+  });
+
+  it('should be invalid if game is not provided', async () => {
+    delete data.game;
+
+    const room = new Room(data);
+
+    expect.assertions(1);
+    await room.validate()
+      .catch((err) => { expect(err.errors.game).toBeDefined(); });
   });
 });
