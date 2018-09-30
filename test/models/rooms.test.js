@@ -41,4 +41,14 @@ describe('Rooms', async () => {
     await room.validate()
       .catch((err) => { expect(err.errors.game).toBeDefined(); });
   });
+
+  it('should be invalid if name shorter than 3 characters', async () => {
+    data.name = 'aa';
+
+    const room = new Room(data);
+
+    expect.assertions(1);
+    await room.validate()
+      .catch((err) => { expect(err.errors.name).toBeDefined(); });
+  });
 });
