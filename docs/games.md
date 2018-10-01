@@ -2,6 +2,7 @@
 
 - [List](#list)
 - [Show](#show)
+- [Update](#update)
 
 ## List
 
@@ -92,3 +93,49 @@ Retrieves room information
         "maxPlayers": 6,
         "__v": 0
     },
+
+## Update
+
+#### Description
+
+Updates game's information
+
+#### Endpoint
+
+| method | path | authentication |
+| :-: | :-: | :-: |
+| PUT | /api/games/:id | admin |
+
+#### Example
+
+    curl -X PUT http://localhost:3000/api/games/5bb19836d290f537358bd750 -H "Content-type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmEwMjY3OGU3NzAyYjdjYjM2MTNkODUiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE1MzcyMjM0MTV9.bT8ZqkyPJ3tdz8luz2TB5ba96WHq7hxUmGp0JVUv9qc" -d '{"name":"new name","description":"new description","minPlayers": 3,"maxPlayers": 8}'
+
+#### Request
+
+*Header*
+
+    Content-Type: application/json
+    Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmEwMjY3OGU3NzAyYjdjYjM2MTNkODUiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE1MzcyMjM0MTV9.bT8ZqkyPJ3tdz8luz2TB5ba96WHq7hxUmGp0JVUv9qc"
+
+*Body*
+
+    {
+        "name": "new name",
+        "description": "new description",
+        "minPlayers": 3,
+        "maxPlayers": 8
+    }
+
+#### Response
+
+*Body*
+
+    {
+        "_id": "5bb19836d290f537358bd750",
+        "name": "new name",
+        "description": "new description",
+        "minPlayers": 3,
+        "maxPlayers": 8,
+        "__v": 0
+    }
+
