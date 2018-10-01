@@ -1,8 +1,9 @@
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const mongoose = require('mongoose');
 const api = require('../../');
-const { Room } = require('../../models/rooms');
+const { Room, fields } = require('../../models/rooms');
 const { User } = require('../../models/users');
 const { Game } = require('../../models/games');
 
@@ -85,13 +86,13 @@ describe('GET methods on /api/rooms', async () => {
     await Promise.all(cleanUpUsersAndGames);
   });
 
-  const getRequest = () => request(api)
-    .get('/api/rooms')
+  const getRequest = id => request(api)
+    .get(`/api/rooms/${id}`)
     .set('Authorization', `Bearer ${token}`);
 
-  describe('GET list of games', async () => {
+  describe('GET list of rooms', async () => {
     it('should return 200 if valid', async () => {
-      const res = await getRequest();
+      const res = await getRequest('');
 
       expect(res.status).toBe(200);
     });
@@ -99,15 +100,60 @@ describe('GET methods on /api/rooms', async () => {
     it('should return 401 if not logged in ', async () => {
       token = '';
 
-      const res = await getRequest();
+      const res = await getRequest('');
 
       expect(res.status).toBe(401);
     });
 
     it('should return list of rooms', async () => {
-      const res = await getRequest();
+      const res = await getRequest('');
 
       expect(res.body.length).toBe(2);
+    });
+  });
+
+
+  describe('GET room details', async () => {
+    let roomId;
+
+    beforeEach(() => {
+      roomId = roomsInDb[0]._id;
+    });
+
+    it('should return 401 if not logged in', async () => {
+      token = '';
+
+      const res = await getRequest(roomId);
+
+      expect(res.status).toBe(401);
+    });
+
+    it('should return 200 if valid', async () => {
+      const res = await getRequest(roomId);
+
+      expect(res.status).toBe(200);
+    });
+
+    it('should return 200 if valid', async () => {
+      const res = await getRequest(roomId);
+
+      fields.forEach(p => expect(res.body).toHaveProperty(p));
+    });
+
+    it('should return 404 if roomId not found', async () => {
+      roomId = new mongoose.Types.ObjectId();
+
+      const res = await getRequest(roomId);
+
+      expect(res.status).toBe(404);
+    });
+
+    it('should return 400 if roomId is invalid', async () => {
+      roomId = 1;
+
+      const res = await getRequest(roomId);
+
+      expect(res.status).toBe(400);
     });
   });
 });

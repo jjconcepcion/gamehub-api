@@ -24,3 +24,4 @@ const roomsSchema = new mongoose.Schema({
 });
 
 module.exports.Room = mongoose.model('Room', roomsSchema);
+module.exports.fields = Object.keys(roomsSchema.paths);
