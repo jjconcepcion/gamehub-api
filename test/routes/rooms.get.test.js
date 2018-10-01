@@ -85,7 +85,7 @@ describe('GET methods on /api/rooms', async () => {
     await Promise.all(cleanUpUsersAndGames);
   });
 
-  const getRequest = (id) => request(api)
+  const getRequest = id => request(api)
     .get(`/api/rooms/${id}`)
     .set('Authorization', `Bearer ${token}`);
 
@@ -108,6 +108,29 @@ describe('GET methods on /api/rooms', async () => {
       const res = await getRequest('');
 
       expect(res.body.length).toBe(2);
+    });
+  });
+
+
+  describe('GET room details', async () => {
+    let roomId;
+
+    beforeEach(() => {
+      roomId = roomsInDb[0]._id;
+    });
+
+    it('should return 401 if not logged in', async () => {
+      token = '';
+
+      const res = await getRequest(roomId);
+
+      expect(res.status).toBe(401);
+    });
+
+    it('should return 200 if valid', async () => {
+      const res = await getRequest(roomId);
+
+      expect(res.status).toBe(200);
     });
   });
 });

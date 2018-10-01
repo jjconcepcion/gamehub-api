@@ -10,4 +10,7 @@ router.get('/', auth, async (req, res) => {
   res.send(rooms);
 });
 
+router.get('/:id', auth, async (req, res) => {
+  res.send();
+});
 module.exports = router;
