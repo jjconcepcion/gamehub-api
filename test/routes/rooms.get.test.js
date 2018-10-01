@@ -85,13 +85,13 @@ describe('GET methods on /api/rooms', async () => {
     await Promise.all(cleanUpUsersAndGames);
   });
 
-  const getRequest = () => request(api)
-    .get('/api/rooms')
+  const getRequest = (id) => request(api)
+    .get(`/api/rooms/${id}`)
     .set('Authorization', `Bearer ${token}`);
 
   describe('GET list of games', async () => {
     it('should return 200 if valid', async () => {
-      const res = await getRequest();
+      const res = await getRequest('');
 
       expect(res.status).toBe(200);
     });
@@ -99,13 +99,13 @@ describe('GET methods on /api/rooms', async () => {
     it('should return 401 if not logged in ', async () => {
       token = '';
 
-      const res = await getRequest();
+      const res = await getRequest('');
 
       expect(res.status).toBe(401);
     });
 
     it('should return list of rooms', async () => {
-      const res = await getRequest();
+      const res = await getRequest('');
 
       expect(res.body.length).toBe(2);
     });
