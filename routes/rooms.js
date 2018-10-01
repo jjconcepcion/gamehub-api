@@ -1,8 +1,9 @@
 const express = require('express');
+const auth = require('../middleware/auth');
 
 const router = express.Router();
 
-router.use('/', (req, res) => {
+router.use('/', auth, (req, res) => {
   res.send();
 });
 
