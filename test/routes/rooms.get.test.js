@@ -2,7 +2,7 @@ const request = require('supertest');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const api = require('../../');
-const { Room } = require('../../models/rooms');
+const { Room, fields } = require('../../models/rooms');
 const { User } = require('../../models/users');
 const { Game } = require('../../models/games');
 
@@ -131,6 +131,12 @@ describe('GET methods on /api/rooms', async () => {
       const res = await getRequest(roomId);
 
       expect(res.status).toBe(200);
+    });
+
+    it('should return 200 if valid', async () => {
+      const res = await getRequest(roomId);
+
+      fields.forEach(p => expect(res.body).toHaveProperty(p));
     });
   });
 });

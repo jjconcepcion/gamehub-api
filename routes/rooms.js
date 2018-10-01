@@ -11,6 +11,8 @@ router.get('/', auth, async (req, res) => {
 });
 
 router.get('/:id', auth, async (req, res) => {
-  res.send();
+  const roomInDb = await Room.findOne({ _id: req.params.id });
+
+  res.send(roomInDb);
 });
 module.exports = router;
