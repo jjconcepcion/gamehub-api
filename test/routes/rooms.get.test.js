@@ -1,6 +1,7 @@
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const mongoose = require('mongoose');
 const api = require('../../');
 const { Room, fields } = require('../../models/rooms');
 const { User } = require('../../models/users');
@@ -137,6 +138,22 @@ describe('GET methods on /api/rooms', async () => {
       const res = await getRequest(roomId);
 
       fields.forEach(p => expect(res.body).toHaveProperty(p));
+    });
+
+    it('should return 404 if roomId not found', async () => {
+      roomId = new mongoose.Types.ObjectId();
+
+      const res = await getRequest(roomId);
+
+      expect(res.status).toBe(404);
+    });
+
+    it('should return 400 if roomId is invalid', async () => {
+      roomId = 1;
+
+      const res = await getRequest(roomId);
+
+      expect(res.status).toBe(400);
     });
   });
 });
