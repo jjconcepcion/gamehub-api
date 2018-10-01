@@ -2,30 +2,93 @@ const request = require('supertest');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const api = require('../../');
-const { Rooms } = require('../../models/rooms');
+const { Room } = require('../../models/rooms');
+const { User } = require('../../models/users');
+const { Game } = require('../../models/games');
 
 describe('GET methods on /api/rooms', async () => {
   let rooms;
   let token;
   let userToken;
+  let userId;
+  let gameId;
+  let roomsInDb;
 
   const generateUserToken = () => jwt.sign({
     _id: 1,
     isAdmin: false,
   }, config.get('jwtPrivateKey'));
 
-  const getRequest = () => request(api)
-    .get('/api/rooms')
-    .set('Authorization', `Bearer ${token}`);
+  const createUser = () => {
+    const user = new User({
+      name: 'user name',
+      email: 'a@mail.com',
+      password: '12345678',
+    });
+    return user.save();
+  };
+
+  const createGame = () => {
+    const game = new Game({
+      name: 'game name',
+      description: 'Game description.',
+      minPlayers: 2,
+      maxPlayers: 2,
+    });
+    return game.save();
+  };
 
   beforeAll(async () => {
-    userToken = await generateUserToken();
+    const preTestSetup = [
+      generateUserToken(),
+      createUser(),
+      createGame(),
+    ];
+
+    let user;
+    let game;
+    [userToken, user, game] = await Promise.all(preTestSetup);
+
+    userId = user._id;
+    gameId = game._id;
   });
 
   beforeEach(async () => {
     token = userToken;
+
+    rooms = [
+      {
+        name: 'room1',
+        owner: userId,
+        game: gameId,
+      },
+      {
+        name: 'room2',
+        owner: userId,
+        game: gameId,
+      },
+    ];
+
+    roomsInDb = await Room.insertMany(rooms);
   });
-  
+
+  afterEach(async () => {
+    await Room.remove({});
+  });
+
+  afterAll(async () => {
+    const cleanUpUsersAndGames = [
+      User.remove({}),
+      Game.remove({}),
+    ];
+
+    await Promise.all(cleanUpUsersAndGames);
+  });
+
+  const getRequest = () => request(api)
+    .get('/api/rooms')
+    .set('Authorization', `Bearer ${token}`);
+
   describe('GET list of games', async () => {
     it('should return 200 if valid', async () => {
       const res = await getRequest();
@@ -39,6 +102,12 @@ describe('GET methods on /api/rooms', async () => {
       const res = await getRequest();
 
       expect(res.status).toBe(401);
+    });
+
+    it('should return list of rooms', async () => {
+      const res = await getRequest();
+
+      expect(res.body.length).toBe(2);
     });
   });
 });
