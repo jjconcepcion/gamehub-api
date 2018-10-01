@@ -1,8 +1,51 @@
 # Game
-
+- [Create](#create)
 - [List](#list)
 - [Show](#show)
 - [Update](#update)
+
+## Create
+
+#### Description
+Creates a new game
+
+#### Endpoint
+
+| method | path | authentication |
+| :-: | :-: | :-: |
+| POST | /api/games | admin |
+
+#### Example
+
+    curl -X POST http://localhost:3000/api/games -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmEwMjY3OGU3NzAyYjdjYjM2MTNkODUiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE1MzcyMjM0MTV9.bT8ZqkyPJ3tdz8luz2TB5ba96WHq7hxUmGp0JVUv9qc" -d '{"name":"game name","description":"game description","minPlayers":1,"maxPlayers":4}'
+
+#### Request
+*Headers*
+
+    Content-Type: application/json
+    Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmEwMjY3OGU3NzAyYjdjYjM2MTNkODUiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE1MzcyMjM0MTV9.bT8ZqkyPJ3tdz8luz2TB5ba96WHq7hxUmGp0JVUv9qc
+
+*Body*
+
+    {
+        "name": "game name",
+        "description": "game description",
+        "minPlayers": 1,
+        "maxPlayers": 4
+    }
+
+#### Response
+
+*Body*
+
+    {
+        "_id": "5bb2a456ded4230f9058e85d",
+        "name": "game name",
+        "description": "game descript ion",
+        "minPlayers": 1,
+        "maxPlayers": 4,
+        "__v": 0
+    }
 
 ## List
 
