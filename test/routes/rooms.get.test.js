@@ -89,7 +89,7 @@ describe('GET methods on /api/rooms', async () => {
     .get(`/api/rooms/${id}`)
     .set('Authorization', `Bearer ${token}`);
 
-  describe('GET list of games', async () => {
+  describe('GET list of rooms', async () => {
     it('should return 200 if valid', async () => {
       const res = await getRequest('');
 
