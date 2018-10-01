@@ -5,6 +5,7 @@ const login = require('./login');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
 const games = require('./games');
+const rooms = require('./rooms');
 const jsonSyntaxError = require('../middleware/jsonSyntaxError');
 
 module.exports = function initializeRoutes(app) {
@@ -14,6 +15,7 @@ module.exports = function initializeRoutes(app) {
   app.use('/api/users', users);
   app.use('/api/login', login);
   app.use('/api/games', games);
+  app.use('/api/rooms', rooms);
 
   // test route for auth middleware
   app.use('/api/protected', auth, home);
