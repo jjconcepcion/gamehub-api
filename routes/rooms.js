@@ -25,4 +25,8 @@ router.get('/:id', auth, async (req, res) => {
 
   return res.send(roomInDb);
 });
+
+router.post('/', auth, (req, res) => {
+  res.send();
+});
 module.exports = router;
