@@ -26,7 +26,19 @@ router.get('/:id', auth, async (req, res) => {
   return res.send(roomInDb);
 });
 
-router.post('/', auth, (req, res) => {
-  res.send();
+router.post('/', auth, async (req, res) => {
+  const room = new Room({
+    name: req.body.name,
+    owner: req.body.ownerId,
+    game: req.body.gameId,
+  });
+
+  try {
+    await room.validate();
+  } catch (err) {
+    return res.status(400).send({ error: err.message });
+  }
+
+  return res.send();
 });
 module.exports = router;
