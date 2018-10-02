@@ -182,3 +182,37 @@ Updates game's information
         "__v": 0
     }
 
+## Delete
+
+#### Description
+
+Removes a game type
+
+#### Endpoint
+
+| method | path | authentication |
+| :-: | :-: | :-: |
+| DELETE | /api/game/:id | admin |
+
+#### Example
+    curl -X DELETE http://localhost:3000/api/games/5bb2a549ded4230f9058e85f -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmEwMjY3OGU3NzAyYjdjYjM2MTNkODUiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE1MzcyMjM0MTV9.bT8ZqkyPJ3tdz8luz2TB5ba96WHq7hxUmGp0JVUv9qc"
+
+
+
+#### Request
+*Header*
+
+    Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmEwMjY3OGU3NzAyYjdjYjM2MTNkODUiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE1MzcyMjM0MTV9.bT8ZqkyPJ3tdz8luz2TB5ba96WHq7hxUmGp0JVUv9qc
+
+
+#### Response
+*Body*
+
+    {
+        "_id": "5bb2a549ded4230f9058e85f",
+        "name": "deleted game",
+        "description": "lorem ipsum",
+        "minPlayers": 1,
+        "maxPlayers": 4,
+        "__v": 0
+    }
