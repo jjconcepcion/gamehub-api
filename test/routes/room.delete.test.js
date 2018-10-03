@@ -12,12 +12,13 @@ describe('DELETE /api/rooms/:id', async () => {
   let userId;
   let gameId;
   let token;
-  let userToken;
+  let ownerToken;
 
-  const generateUserToken = () => jwt.sign({
-    _id: 1,
+  const generateUserToken = id => jwt.sign({
+    _id: id,
     isAdmin: false,
   }, config.get('jwtPrivateKey'));
+
 
   const createUser = () => {
     const user = new User({
@@ -40,16 +41,20 @@ describe('DELETE /api/rooms/:id', async () => {
 
   beforeAll(async () => {
     const preTestSetup = [
-      generateUserToken(),
       createUser(),
       createGame(),
     ];
 
-    [userToken, userId, gameId] = await Promise.all(preTestSetup);
+    const [user, game] = await Promise.all(preTestSetup);
+
+    userId = user._id;
+    gameId = game._id;
+
+    ownerToken = await generateUserToken(userId);
   });
 
   beforeEach(async () => {
-    token = userToken;
+    token = ownerToken;
 
     const room = await (new Room({
       name: 'room1',
@@ -103,4 +108,12 @@ describe('DELETE /api/rooms/:id', async () => {
     expect(res.status).toBe(404);
   });
 
+  it('return 403 if not the owner of the room', async () => {
+    const nonOwnerId = new mongoose.Types.ObjectId();
+    token = await generateUserToken(nonOwnerId);
+
+    const res = await deleteRequest();
+
+    expect(res.status).toBe(403);
+  });
 });

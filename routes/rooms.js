@@ -84,6 +84,10 @@ router.delete('/:id', auth, async (req, res) => {
     return res.status(404).send({ error: 'room not found ' });
   }
 
+  if (!roomInDb.owner._id.equals(req.user._id)) {
+    return res.status(403).send({ error: 'access denied' });
+  }
+
   return res.send();
 });
 
