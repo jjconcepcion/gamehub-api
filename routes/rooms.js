@@ -71,7 +71,7 @@ router.post('/', auth, async (req, res) => {
   return res.send(savedRoom);
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', auth, (req, res) => {
   res.send();
 });
 
