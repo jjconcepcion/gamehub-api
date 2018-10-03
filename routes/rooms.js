@@ -2,13 +2,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 const auth = require('../middleware/auth');
 const { Room } = require('../models/rooms');
-const { User } = require('../models/users');
-const { Game } = require('../models/games');
+const { User, shortFields: userShortFields } = require('../models/users');
+const { Game, shortFields: gameShortFields } = require('../models/games');
 
 const router = express.Router();
 
 router.get('/', auth, async (req, res) => {
-  const rooms = await Room.find({});
+  const rooms = await Room.find({})
+    .populate('owner', userShortFields)
+    .populate('game', gameShortFields);
 
   res.send(rooms);
 });
@@ -19,7 +21,10 @@ router.get('/:id', auth, async (req, res) => {
     return res.status(400).send({ error: '_id: invalid syntax' });
   }
 
-  const roomInDb = await Room.findOne({ _id: req.params.id });
+  const roomInDb = await Room.findOne({ _id: req.params.id })
+    .populate('owner', userShortFields)
+    .populate('game', gameShortFields);
+
 
   if (!roomInDb) {
     return res.status(404).send({ error: '_id: room not found' });

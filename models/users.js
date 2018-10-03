@@ -55,3 +55,5 @@ userSchema.methods.generateAuthToken = function generateAuthToken() {
 };
 
 module.exports.User = mongoose.model('User', userSchema);
+
+module.exports.shortFields = ['_id', 'name'].join(' ');
