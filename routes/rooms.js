@@ -72,7 +72,13 @@ router.post('/', auth, async (req, res) => {
 });
 
 router.delete('/:id', auth, (req, res) => {
-  res.send();
+  const validId = mongoose.Types.ObjectId.isValid(req.params.id);
+
+  if (!validId) {
+    return res.status(400).send({ error: '_id: invalid syntax' });
+  }
+
+  return res.send();
 });
 
 module.exports = router;

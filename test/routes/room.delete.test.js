@@ -1,6 +1,7 @@
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const mongoose = require('mongoose');
 const api = require('../../index');
 
 describe('DELETE /api/rooms/:id', async () => {
@@ -19,6 +20,8 @@ describe('DELETE /api/rooms/:id', async () => {
 
   beforeEach(() => {
     token = userToken;
+
+    id = new mongoose.Types.ObjectId();
   });
 
   const deleteRequest = () => request(api)
@@ -38,4 +41,14 @@ describe('DELETE /api/rooms/:id', async () => {
 
     expect(res.status).toBe(401);
   });
+
+  it('should return 400 if not valid room id', async () => {
+    id = 1;
+
+    const res = await deleteRequest();
+
+    expect(res.status).toBe(400);
+  });
+
+
 });
