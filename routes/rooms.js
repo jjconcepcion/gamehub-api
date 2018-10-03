@@ -71,4 +71,8 @@ router.post('/', auth, async (req, res) => {
   return res.send(savedRoom);
 });
 
+router.delete('/:id', (req, res) => {
+  res.send();
+});
+
 module.exports = router;
