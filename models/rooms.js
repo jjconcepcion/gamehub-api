@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const roomsSchema = new mongoose.Schema({
   name: {
     type: String,
-    minlength: 3,
+    minlength: [3, 'must be at least 3 characters in length'],
     required: true,
   },
   owner: {
