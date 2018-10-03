@@ -116,4 +116,12 @@ describe('DELETE /api/rooms/:id', async () => {
 
     expect(res.status).toBe(403);
   });
+
+  it('should delete room from database', async () => {
+    await deleteRequest();
+
+    const room = await Room.findOne({ _id: roomId });
+
+    expect(room).toBeNull();
+  });
 });

@@ -88,6 +88,8 @@ router.delete('/:id', auth, async (req, res) => {
     return res.status(403).send({ error: 'access denied' });
   }
 
+  await Room.remove({ _id: req.params.id });
+
   return res.send();
 });
 
