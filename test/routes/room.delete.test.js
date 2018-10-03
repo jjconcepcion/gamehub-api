@@ -3,9 +3,14 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const mongoose = require('mongoose');
 const api = require('../../index');
+const { User } = require('../../models/users');
+const { Game } = require('../../models/games');
+const { Room } = require('../../models/rooms');
 
 describe('DELETE /api/rooms/:id', async () => {
-  let id;
+  let roomId;
+  let userId;
+  let gameId;
   let token;
   let userToken;
 
@@ -14,18 +19,58 @@ describe('DELETE /api/rooms/:id', async () => {
     isAdmin: false,
   }, config.get('jwtPrivateKey'));
 
+  const createUser = () => {
+    const user = new User({
+      name: 'user name',
+      email: 'a@mail.com',
+      password: '12345678',
+    });
+    return user.save();
+  };
+
+  const createGame = () => {
+    const game = new Game({
+      name: 'game name',
+      description: 'Game description.',
+      minPlayers: 2,
+      maxPlayers: 2,
+    });
+    return game.save();
+  };
+
   beforeAll(async () => {
-    userToken = await generateUserToken();
+    const preTestSetup = [
+      generateUserToken(),
+      createUser(),
+      createGame(),
+    ];
+
+    [userToken, userId, gameId] = await Promise.all(preTestSetup);
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     token = userToken;
 
-    id = new mongoose.Types.ObjectId();
+    const room = await (new Room({
+      name: 'room1',
+      owner: userId,
+      game: gameId,
+    })).save();
+
+    roomId = room._id;
+  });
+
+  afterEach(async () => {
+    await Room.remove({});
+  });
+
+  afterAll(async () => {
+    await User.remove({});
+    await Game.remove({});
   });
 
   const deleteRequest = () => request(api)
-    .delete(`/api/rooms/${id}`)
+    .delete(`/api/rooms/${roomId}`)
     .set('Authorization', `Bearer ${token}`);
 
   it('should return 200 if valid', async () => {
@@ -43,12 +88,19 @@ describe('DELETE /api/rooms/:id', async () => {
   });
 
   it('should return 400 if not valid room id', async () => {
-    id = 1;
+    roomId = 1;
 
     const res = await deleteRequest();
 
     expect(res.status).toBe(400);
   });
 
+  it('return 404 if room not found', async () => {
+    roomId = new mongoose.Types.ObjectId();
+
+    const res = await deleteRequest();
+
+    expect(res.status).toBe(404);
+  });
 
 });

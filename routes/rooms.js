@@ -71,11 +71,17 @@ router.post('/', auth, async (req, res) => {
   return res.send(savedRoom);
 });
 
-router.delete('/:id', auth, (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
   const validId = mongoose.Types.ObjectId.isValid(req.params.id);
 
   if (!validId) {
     return res.status(400).send({ error: '_id: invalid syntax' });
+  }
+
+  const roomInDb = await Room.findOne({ _id: req.params.id });
+
+  if (!roomInDb) {
+    return res.status(404).send({ error: 'room not found ' });
   }
 
   return res.send();
