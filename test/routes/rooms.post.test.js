@@ -13,6 +13,7 @@ describe('POST /api/rooms', async () => {
   let payload;
   let ownerId;
   let gameId;
+  let existingRoom;
 
   const generateUserToken = () => jwt.sign({
     _id: 1,
@@ -48,7 +49,7 @@ describe('POST /api/rooms', async () => {
     [userToken, ownerId, gameId] = await Promise.all(preTestSetup);
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     token = userToken;
 
     payload = {
@@ -56,6 +57,16 @@ describe('POST /api/rooms', async () => {
       ownerId,
       gameId,
     };
+
+    existingRoom = await (new Room({
+      name: 'existing name',
+      owner: payload.ownerId,
+      game: payload.gameId,
+    })).save();
+  });
+
+  afterEach(async () => {
+    await Room.remove({});
   });
 
   afterAll(async () => {
@@ -162,5 +173,13 @@ describe('POST /api/rooms', async () => {
     const roomInDb = await Room.findOne({ _id: res.body._id });
 
     fields.forEach(p => expect(roomInDb).toHaveProperty(p));
+  });
+
+  it('should return 409 if room name already exits', async () => {
+    payload.name = existingRoom.name;
+
+    const res = await postRequest();
+
+    expect(res.status).toBe(409);
   });
 });

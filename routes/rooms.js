@@ -41,12 +41,13 @@ router.post('/', auth, async (req, res) => {
     return res.status(400).send({ error: err.message });
   }
 
-  const lookUpOwnerAndGame = [
+  const lookUpOwnerAndGameAndRoom = [
     User.findOne({ _id: req.body.ownerId }),
     Game.findOne({ _id: req.body.gameId }),
+    Room.findOne({ name: req.body.name }),
   ];
 
-  const [ownerInDb, gameInDb] = await Promise.all(lookUpOwnerAndGame);
+  const [ownerInDb, gameInDb, roomExists] = await Promise.all(lookUpOwnerAndGameAndRoom);
 
   if (!ownerInDb) {
     return res.status(404).send({ error: 'ownerId: not found' });
@@ -54,6 +55,10 @@ router.post('/', auth, async (req, res) => {
 
   if (!gameInDb) {
     return res.status(404).send({ error: 'gameId: not found' });
+  }
+
+  if (roomExists) {
+    return res.status(409).send({ erro: 'name: unavailable' });
   }
 
   const savedRoom = await room.save();
