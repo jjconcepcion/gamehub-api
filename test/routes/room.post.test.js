@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const api = require('../../index');
 const { User } = require('../../models/users');
 const { Game } = require('../../models/games');
+const { Room, fields } = require('../../models/rooms');
 
 describe('POST /api/rooms', async () => {
   let token;
@@ -141,4 +142,17 @@ describe('POST /api/rooms', async () => {
     expect(res.status).toBe(404)
   });
 
+  it('should return room', async () => {
+    const res = await postRequest();
+
+    fields.forEach(p => expect(res.body).toHaveProperty(p));
+  });
+
+  it('should save the room in the database', async () => {
+    const res = await postRequest();
+
+    const roomInDb = await Room.findOne({ _id: res.body._id });
+
+    fields.forEach(p => expect(roomInDb).toHaveProperty(p));
+  });
 });

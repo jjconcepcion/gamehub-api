@@ -56,6 +56,9 @@ router.post('/', auth, async (req, res) => {
     return res.status(404).send({ error: 'gameId: not found' });
   }
 
-  return res.send();
+  const savedRoom = await room.save();
+
+  return res.send(savedRoom);
 });
+
 module.exports = router;
