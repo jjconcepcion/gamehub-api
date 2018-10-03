@@ -2,7 +2,7 @@ const request = require('supertest');
 const config = require('config');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-const api = require('../../index');
+const api = require('../..');
 const { User } = require('../../models/users');
 const { Game } = require('../../models/games');
 const { Room, fields } = require('../../models/rooms');
@@ -37,7 +37,7 @@ describe('POST /api/rooms', async () => {
     });
     return game.save();
   };
- 
+
   beforeAll(async () => {
     const preTestSetup = [
       generateUserToken(),
@@ -45,7 +45,7 @@ describe('POST /api/rooms', async () => {
       createGame(),
     ];
 
-    [ userToken, ownerId, gameId ] = await Promise.all(preTestSetup);
+    [userToken, ownerId, gameId] = await Promise.all(preTestSetup);
   });
 
   beforeEach(() => {
@@ -58,6 +58,14 @@ describe('POST /api/rooms', async () => {
     };
   });
 
+  afterAll(async () => {
+    const cleanUpUsersAndGames = [
+      User.remove({}),
+      Game.remove({}),
+    ];
+
+    await Promise.all(cleanUpUsersAndGames);
+  });
   const postRequest = () => request(api)
     .post('/api/rooms')
     .set('Authorization', `Bearer ${token}`)
@@ -88,7 +96,7 @@ describe('POST /api/rooms', async () => {
 
   it('should return 400 if ownerId not provided', async () => {
     delete payload.ownerId;
-    
+
     const res = await postRequest();
 
     expect(res.status).toBe(400);
@@ -96,7 +104,7 @@ describe('POST /api/rooms', async () => {
 
   it('should return 400 if gameId not provided', async () => {
     delete payload.gameId;
-    
+
     const res = await postRequest();
 
     expect(res.status).toBe(400);
@@ -104,7 +112,7 @@ describe('POST /api/rooms', async () => {
 
   it('should return 400 if name is shorter than 3 characters', async () => {
     payload.name = 'aa';
-    
+
     const res = await postRequest();
 
     expect(res.status).toBe(400);
@@ -131,7 +139,7 @@ describe('POST /api/rooms', async () => {
 
     const res = await postRequest();
 
-    expect(res.status).toBe(404)
+    expect(res.status).toBe(404);
   });
 
   it('should return 404 if game not found', async () => {
@@ -139,7 +147,7 @@ describe('POST /api/rooms', async () => {
 
     const res = await postRequest();
 
-    expect(res.status).toBe(404)
+    expect(res.status).toBe(404);
   });
 
   it('should return room', async () => {
