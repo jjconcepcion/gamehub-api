@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const api = require('../../index');
 const { User } = require('../../models/users');
 const { Game } = require('../../models/games');
-const { Room } = require('../../models/rooms');
+const { Room, fields} = require('../../models/rooms');
 
 describe('DELETE /api/rooms/:id', async () => {
   let roomId;
@@ -123,5 +123,11 @@ describe('DELETE /api/rooms/:id', async () => {
     const room = await Room.findOne({ _id: roomId });
 
     expect(room).toBeNull();
+  });
+
+  it('should return the deleted room', async () => {
+    const res = await deleteRequest();
+
+    fields.forEach(p => expect(res.body).toHaveProperty(p));
   });
 });

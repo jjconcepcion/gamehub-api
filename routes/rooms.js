@@ -90,7 +90,7 @@ router.delete('/:id', auth, async (req, res) => {
 
   await Room.remove({ _id: req.params.id });
 
-  return res.send();
+  return res.send(roomInDb);
 });
 
 module.exports = router;
