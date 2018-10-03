@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const auth = require('../middleware/auth');
 const { Room } = require('../models/rooms');
+const { User } = require('../models/users');
+const { Game } = require('../models/games');
 
 const router = express.Router();
 
@@ -37,6 +39,21 @@ router.post('/', auth, async (req, res) => {
     await room.validate();
   } catch (err) {
     return res.status(400).send({ error: err.message });
+  }
+
+  const lookUpOwnerAndGame = [
+    User.findOne({ _id: req.body.ownerId }),
+    Game.findOne({ _id: req.body.gameId }),
+  ];
+
+  const [ownerInDb, gameInDb] = await Promise.all(lookUpOwnerAndGame);
+
+  if (!ownerInDb) {
+    return res.status(404).send({ error: 'ownerId: not found' });
+  }
+
+  if (!gameInDb) {
+    return res.status(404).send({ error: 'gameId: not found' });
   }
 
   return res.send();
