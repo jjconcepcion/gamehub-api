@@ -62,6 +62,10 @@ describe('DELETE methods /api/rooms', async () => {
       game: gameId,
     })).save();
 
+    // populate room with player
+    room.players.push(new mongoose.Types.ObjectId(userId));
+    await room.save();
+
     roomId = room._id;
   });
 
@@ -135,9 +139,10 @@ describe('DELETE methods /api/rooms', async () => {
 
   describe('DELETE /api/rooms/:roomId/players/:playerId', () => {
     let playerToken;
+    let playerId;
 
     const leaveRoom = () => request(api)
-      .delete(`/api/rooms/${roomId}/players/${[userId]}`)
+      .delete(`/api/rooms/${roomId}/players/${playerId}`)
       .set('Authorization', `Bearer ${token}`);
 
     beforeAll(async () => {
@@ -146,6 +151,7 @@ describe('DELETE methods /api/rooms', async () => {
 
     beforeEach(() => {
       token = playerToken;
+      playerId = userId;
     });
 
     it('should return 401 if not logged in', async () => {
@@ -171,5 +177,32 @@ describe('DELETE methods /api/rooms', async () => {
 
       expect(res.status).toBe(200);
     });
+
+    it('should return 400 if roomId is invalid', async () => {
+      roomId = 1;
+
+      const res = await leaveRoom();
+
+      expect(res.status).toBe(400);
+    });
+
+    it('should return 404 if room is not found', async () => {
+      roomId = new mongoose.Types.ObjectId();
+
+      const res = await leaveRoom();
+
+      expect(res.status).toBe(404);
+    });
+
+    it('should return 404 if player is not in room', async () => {
+      playerId = new mongoose.Types.ObjectId();
+
+      token = await generateUserToken(playerId);
+
+      const res = await leaveRoom();
+
+      expect(res.status).toBe(404);
+    });
+
   });
 });

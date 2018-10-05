@@ -135,11 +135,29 @@ router.put('/:id/players', auth, async (req, res) => {
   return res.send(room);
 });
 
-router.delete('/:roomId/players/:playerId', auth, (req, res) => {
+router.delete('/:roomId/players/:playerId', auth, async (req, res) => {
   const notPlayer = req.params.playerId !== req.user._id;
 
   if (notPlayer) {
     return res.status(403).send({ error: 'access denied' });
+  }
+
+  const validRoomId = mongoose.Types.ObjectId.isValid(req.params.roomId);
+
+  if (!validRoomId) {
+    return res.status(400).send({ error: 'roomId: invalid syntax' });
+  }
+
+  const room = await Room.findOne({ _id: req.params.roomId });
+
+  if (!room) {
+    return res.status(404).send({ error: 'room not found' });
+  }
+
+  const indexOfPlayer = room.players.findIndex(id => id.equals(req.params.playerId));
+
+  if (indexOfPlayer === -1) {
+    return res.status(404).send({ error: 'player not in room' });
   }
 
   return res.send();
