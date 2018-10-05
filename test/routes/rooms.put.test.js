@@ -1,6 +1,7 @@
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const mongoose = require('mongoose');
 const api = require('../..');
 const { User } = require('../../models/users');
 const { Game } = require('../../models/games');
@@ -96,5 +97,52 @@ describe('PUT /api/rooms/:id/players', async () => {
     const res = await putRequest();
 
     expect(res.status).toBe(401);
+  });
+
+  it('should return 400 if roomId is invalid', async () => {
+    roomId = 1;
+
+    const res = await putRequest();
+
+    expect(res.status).toBe(400);
+  });
+
+  it('should return 400 if userId is invalid', async () => {
+    payload.userId = '';
+
+    const res = await putRequest();
+
+    expect(res.status).toBe(400);
+  });
+
+  it('should return 404 if room not found', async () => {
+    roomId = new mongoose.Types.ObjectId();
+
+    const res = await putRequest();
+
+    expect(res.status).toBe(404);
+  });
+
+  it('should return 404 if user not found', async () => {
+    payload.userId = new mongoose.Types.ObjectId();
+
+    const res = await putRequest();
+
+    expect(res.status).toBe(404);
+  });
+
+  it('should add user to players array', async () => {
+    const res = await putRequest();
+
+    const player = new mongoose.Types.ObjectId(res.body.players[0]);
+
+    expect(player.equals(userId)).toBeTruthy();
+  });
+
+  it('should add user to players array only once', async () => {
+    await putRequest();
+    const res = await putRequest();
+
+    expect(res.body.players.length).toBe(1);
   });
 });
