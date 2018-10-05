@@ -160,6 +160,9 @@ router.delete('/:roomId/players/:playerId', auth, async (req, res) => {
     return res.status(404).send({ error: 'player not in room' });
   }
 
+  room.players.splice(indexOfPlayer, 1);
+  await room.save();
+
   return res.send();
 });
 

@@ -204,5 +204,12 @@ describe('DELETE methods /api/rooms', async () => {
       expect(res.status).toBe(404);
     });
 
+    it('should delete user from players array', async () => {
+      await leaveRoom();
+
+      const room = await Room.findOne({ _id: roomId });
+
+      expect(room.players.length).toBe(0);
+    });
   });
 });
