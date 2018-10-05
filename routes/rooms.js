@@ -93,4 +93,5 @@ router.delete('/:id', auth, async (req, res) => {
   return res.send(roomInDb);
 });
 
+router.put('/:id/players', auth, (req, res) => res.send());
 module.exports = router;
