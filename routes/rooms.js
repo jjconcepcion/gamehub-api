@@ -163,7 +163,7 @@ router.delete('/:roomId/players/:playerId', auth, async (req, res) => {
   room.players.splice(indexOfPlayer, 1);
   await room.save();
 
-  return res.send();
+  return res.status(204).send();
 });
 
 module.exports = router;

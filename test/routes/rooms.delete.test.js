@@ -172,10 +172,10 @@ describe('DELETE methods /api/rooms', async () => {
       expect(res.status).toBe(403);
     });
 
-    it('should return 200 if valid', async () => {
+    it('should return 204 if valid', async () => {
       const res = await leaveRoom();
 
-      expect(res.status).toBe(200);
+      expect(res.status).toBe(204);
     });
 
     it('should return 400 if roomId is invalid', async () => {
