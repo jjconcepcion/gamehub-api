@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const api = require('../..');
 const { User } = require('../../models/users');
 const { Game } = require('../../models/games');
-const { Room, fields} = require('../../models/rooms');
+const { Room, fields } = require('../../models/rooms');
 
 describe('DELETE /api/rooms/:id', async () => {
   let roomId;
