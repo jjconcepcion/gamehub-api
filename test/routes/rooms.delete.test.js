@@ -7,7 +7,7 @@ const { User } = require('../../models/users');
 const { Game } = require('../../models/games');
 const { Room, fields } = require('../../models/rooms');
 
-describe('DELETE /api/rooms/:id', async () => {
+describe('DELETE methods /api/rooms', async () => {
   let roomId;
   let userId;
   let gameId;
@@ -78,56 +78,98 @@ describe('DELETE /api/rooms/:id', async () => {
     .delete(`/api/rooms/${roomId}`)
     .set('Authorization', `Bearer ${token}`);
 
-  it('should return 200 if valid', async () => {
-    const res = await deleteRequest();
+  describe('DELETE /api/rooms/:id', async () => {
+    it('should return 200 if valid', async () => {
+      const res = await deleteRequest();
 
-    expect(res.status).toBe(200);
+      expect(res.status).toBe(200);
+    });
+
+    it('should return 401 if not logged in', async () => {
+      token = '';
+
+      const res = await deleteRequest();
+
+      expect(res.status).toBe(401);
+    });
+
+    it('should return 400 if not valid room id', async () => {
+      roomId = 1;
+
+      const res = await deleteRequest();
+
+      expect(res.status).toBe(400);
+    });
+
+    it('return 404 if room not found', async () => {
+      roomId = new mongoose.Types.ObjectId();
+
+      const res = await deleteRequest();
+
+      expect(res.status).toBe(404);
+    });
+
+    it('return 403 if not the owner of the room', async () => {
+      const nonOwnerId = new mongoose.Types.ObjectId();
+      token = await generateUserToken(nonOwnerId);
+
+      const res = await deleteRequest();
+
+      expect(res.status).toBe(403);
+    });
+
+    it('should delete room from database', async () => {
+      await deleteRequest();
+
+      const room = await Room.findOne({ _id: roomId });
+
+      expect(room).toBeNull();
+    });
+
+    it('should return the deleted room', async () => {
+      const res = await deleteRequest();
+
+      fields.forEach(p => expect(res.body).toHaveProperty(p));
+    });
   });
 
-  it('should return 401 if not logged in', async () => {
-    token = '';
+  describe('DELETE /api/rooms/:roomId/players/:playerId', () => {
+    let playerToken;
 
-    const res = await deleteRequest();
+    const leaveRoom = () => request(api)
+      .delete(`/api/rooms/${roomId}/players/${[userId]}`)
+      .set('Authorization', `Bearer ${token}`);
 
-    expect(res.status).toBe(401);
-  });
+    beforeAll(async () => {
+      playerToken = await generateUserToken(userId);
+    });
 
-  it('should return 400 if not valid room id', async () => {
-    roomId = 1;
+    beforeEach(() => {
+      token = playerToken;
+    });
 
-    const res = await deleteRequest();
+    it('should return 401 if not logged in', async () => {
+      token = '';
 
-    expect(res.status).toBe(400);
-  });
+      const res = await leaveRoom();
 
-  it('return 404 if room not found', async () => {
-    roomId = new mongoose.Types.ObjectId();
+      expect(res.status).toBe(401);
+    });
 
-    const res = await deleteRequest();
+    it('should return 403 if user is not deleting themselves', async () => {
+      const unathorizedId = new mongoose.Types.ObjectId();
 
-    expect(res.status).toBe(404);
-  });
+      token = await generateUserToken(unathorizedId);
 
-  it('return 403 if not the owner of the room', async () => {
-    const nonOwnerId = new mongoose.Types.ObjectId();
-    token = await generateUserToken(nonOwnerId);
+      const res = await leaveRoom();
 
-    const res = await deleteRequest();
+      expect(res.status).toBe(403);
+    });
 
-    expect(res.status).toBe(403);
-  });
+    it('should return 200 if valid', async () => {
+      const res = await leaveRoom();
 
-  it('should delete room from database', async () => {
-    await deleteRequest();
-
-    const room = await Room.findOne({ _id: roomId });
-
-    expect(room).toBeNull();
-  });
-
-  it('should return the deleted room', async () => {
-    const res = await deleteRequest();
-
-    fields.forEach(p => expect(res.body).toHaveProperty(p));
+      expect(res.status).toBe(200);
+    });
   });
 });

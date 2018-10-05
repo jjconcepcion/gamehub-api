@@ -135,4 +135,14 @@ router.put('/:id/players', auth, async (req, res) => {
   return res.send(room);
 });
 
+router.delete('/:roomId/players/:playerId', auth, (req, res) => {
+  const notPlayer = req.params.playerId !== req.user._id;
+
+  if (notPlayer) {
+    return res.status(403).send({ error: 'access denied' });
+  }
+
+  return res.send();
+});
+
 module.exports = router;
