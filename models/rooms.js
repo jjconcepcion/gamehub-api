@@ -21,6 +21,10 @@ const roomsSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  players: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
 });
 
 module.exports.Room = mongoose.model('Room', roomsSchema);

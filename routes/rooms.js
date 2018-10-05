@@ -93,4 +93,46 @@ router.delete('/:id', auth, async (req, res) => {
   return res.send(roomInDb);
 });
 
+router.put('/:id/players', auth, async (req, res) => {
+  if (!req.body.userId) {
+    return res.status(400).send({ error: 'userId required' });
+  }
+
+  const validRoomId = mongoose.Types.ObjectId.isValid(req.params.id);
+
+  if (!validRoomId) {
+    return res.status(400).send({ error: 'invalid room id' });
+  }
+
+  const validUserId = mongoose.Types.ObjectId.isValid(req.body.userId);
+
+  if (!validUserId) {
+    return res.status(400).send({ error: 'invalid user id' });
+  }
+
+  const lookupIds = [
+    Room.findOne({ _id: req.params.id }),
+    User.findOne({ _id: req.body.userId }),
+  ];
+
+  const [room, user] = await Promise.all(lookupIds);
+
+  if (!room) {
+    return res.status(404).send({ error: 'room not found' });
+  }
+
+  if (!user) {
+    return res.status(404).send({ error: 'user not found' });
+  }
+
+  const userInPlayers = room.players.find(id => id.equals(req.body.userId));
+
+  if (!userInPlayers) {
+    room.players.push(new mongoose.Types.ObjectId(req.body.userId));
+    await room.save();
+  }
+
+  return res.send(room);
+});
+
 module.exports = router;
