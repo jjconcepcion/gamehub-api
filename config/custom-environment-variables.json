@@ -1,3 +1,4 @@
 {
-    "jwtPrivateKey": "GAMEHUB_JWT_PRIVATE_KEY"
+    "jwtPrivateKey": "GAMEHUB_JWT_PRIVATE_KEY",
+    "db": "GAMEHUB_DB"
 }
