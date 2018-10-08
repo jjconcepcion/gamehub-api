@@ -142,7 +142,6 @@ Retrieves room information
 
 *Body*
 
-
     {
         "players" : [],
         "_id" : "5bbac33075613f081c06de74",
@@ -164,6 +163,39 @@ Retrieves room information
 ## Update
 
 ## Delete
+
+#### Description
+
+Delete a room
+
+#### Endpoint
+
+| method | path | authentication |
+| :-: | :-: | :-: |
+| DELETE | /api/rooms/:id | admin |
+
+#### Example
+    curl -X DELETE http://localhost:3000/api/rooms/5bbad101f3cd772c68c5a477 -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmI2Y2Q3OTRkNDUwMjI1MjQ0MDI5NTYiLCJuYW1lIjoienp6IiwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTUzODk2OTI0Mn0.rk6trppKo6UIkQk6fSjJNLYRlCnHEYzou154OJsgm6M"
+
+
+#### Request
+*Header*
+
+    Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmI2Y2Q3OTRkNDUwMjI1MjQ0MDI5NTYiLCJuYW1lIjoienp6IiwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTUzODk2OTI0Mn0.rk6trppKo6UIkQk6fSjJNLYRlCnHEYzou154OJsgm6M
+
+
+#### Response
+*Body*
+
+    {
+        "players":[],
+        "_id" : "5bbad101f3cd772c68c5a477",
+        "name" : "deleted room",
+        "owner" : "5bb6cd794d45022524402956",
+        "game" : "5bb196cad290f537358bd74f",
+        "dateCreated" : "2018-10-08T03:37:37.413Z",
+        "__v":0
+    }
 
 ## Join
 
