@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest --watchAll --verbose",
     "dev": "nodemon index.js",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
