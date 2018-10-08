@@ -63,7 +63,7 @@ router.post('/', auth, async (req, res) => {
   }
 
   if (roomExists) {
-    return res.status(409).send({ erro: 'name: unavailable' });
+    return res.status(409).send({ error: 'name: unavailable' });
   }
 
   const savedRoom = await room.save();
