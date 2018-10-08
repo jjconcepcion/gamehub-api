@@ -93,7 +93,7 @@ router.delete('/:id', auth, async (req, res) => {
   return res.send(roomInDb);
 });
 
-router.put('/:id/players', auth, async (req, res) => {
+router.patch('/:id/players', auth, async (req, res) => {
   if (!req.body.userId) {
     return res.status(400).send({ error: 'userId required' });
   }

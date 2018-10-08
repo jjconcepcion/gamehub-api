@@ -7,7 +7,7 @@ const { User } = require('../../models/users');
 const { Game } = require('../../models/games');
 const { Room } = require('../../models/rooms');
 
-describe('PUT /api/rooms/:id/players', async () => {
+describe('PATCH /api/rooms/:id/players', async () => {
   let token;
   let userToken;
   let payload;
@@ -81,7 +81,7 @@ describe('PUT /api/rooms/:id/players', async () => {
   });
 
   const putRequest = () => request(api)
-    .put(`/api/rooms/${roomId}/players`)
+    .patch(`/api/rooms/${roomId}/players`)
     .set('Authorization', `Bearer ${token}`)
     .send(payload);
 
