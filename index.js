@@ -1,5 +1,6 @@
 const express = require('express');
 const config = require('config');
+const productionMiddleware = require('./middleware/production');
 const logger = require('./init/logger');
 const connectToDatabase = require('./init/db');
 const useRoutes = require('./routes');
@@ -10,6 +11,8 @@ const app = express();
 checkEnvironmentVariables();
 connectToDatabase();
 useRoutes(app);
+productionMiddleware(app);
+
 
 const port = process.env.PORT || config.get('listenPort');
 
