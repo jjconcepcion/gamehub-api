@@ -51,7 +51,7 @@ Creates a new game
 
 #### Description
 
-Retrieves all rooms information
+Retrieves all games information
 
 #### Endpoint
 
