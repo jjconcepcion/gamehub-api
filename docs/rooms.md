@@ -117,6 +117,50 @@ Retrieves all rooms information
 
 ## Show
 
+#### Description
+
+Retrieves room information
+
+#### Endpoint
+
+| method | path | authentication |
+| :-: | :-: | :-: |
+| GET | /api/rooms/:id | user |
+
+
+#### Example
+    curl http://localhost:3000/api/rooms/5bbac33075613f081c06de74 -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmFjMjM4ZTE1YjExZTRkZWJjOGIxMTgiLCJuYW1lIjoidXNlcl9uYW1lIiwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTUzODAwNzk1MH0.a1b5cVZX0K5fTm7fcFXjmiWD7LI1-NKliaSNHMZlJUE"
+
+#### Request
+
+*Header*
+
+    Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmFjMjM4ZTE1YjExZTRkZWJjOGIxMTgiLCJuYW1lIjoidXNlcl9uYW1lIiwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTUzODAwNzk1MH0.a1b5cVZX0K5fTm7fcFXjmiWD7LI1-NKliaSNHMZlJUE
+
+
+#### Response
+
+*Body*
+
+
+    {
+        "players" : [],
+        "_id" : "5bbac33075613f081c06de74",
+        "name" : "room 112",
+        "owner" : {
+            "_id" : "5bb6cd794d45022524402956",
+            "name" : "zzz"
+        },
+        "game" : {
+            "_id" : "5bb19836d290f537358bd750",
+            "name" : "Eight-ball",
+            "minPlayers" : 2,
+            "maxPlayers" : 2
+        },
+        "dateCreated":"2018-10-08T02:38:40.761Z",
+        "__v":0
+    }
+
 ## Update
 
 ## Delete
