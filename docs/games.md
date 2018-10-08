@@ -105,7 +105,7 @@ Retrieves all games information
 
 #### Description
 
-Retrieves room information
+Retrieves game information
 
 #### Endpoint
 
